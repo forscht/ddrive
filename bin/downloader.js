@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /* eslint-disable no-restricted-syntax,no-await-in-loop */
 const request = require('request-promise-native')
 const _ = require('lodash')
@@ -20,16 +19,14 @@ const parseURI = async (url) => {
 }
 
 const downloader = async () => {
+    const i = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    })
     const data = await new Promise((resolve) => {
-        const i = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-        })
         i.question('> Enter file uri : ', async (url) => {
             try {
                 const parsedData = await parseURI(url)
-                i.close()
-                process.stdin.destroy()
                 resolve(parsedData)
             } catch (err) {
                 console.log('=== could not parse uri')
@@ -70,8 +67,10 @@ const downloader = async () => {
         progressBar.stop()
         fs.unlinkSync(downloadFilePath)
     }
-    process.on('SIGTERM', () => fs.unlinkSync(downloadFilePath))
-    process.on('SIGINT', () => fs.unlinkSync(downloadFilePath))
+    i.question('> Press [ENTER] to exit ', async () => {
+        i.close()
+        process.stdin.destroy()
+    })
 }
 
 downloader().then()

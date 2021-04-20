@@ -9,14 +9,10 @@
     "node": "14.16.1",
     "npm": "6.14.12"
   },
-  "bin": "bin/downloader.js",
   "devDependencies": {
     "eslint": "^5.15.3",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0"
-  },
-  "pkg": {
-    "outputPath": "dist"
   },
   "dependencies": {
     "cli-progress": "^3.9.0",
