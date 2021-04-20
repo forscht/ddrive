@@ -1,0 +1,33 @@
+{
+  "name": "ddrive",
+  "version": "1.0.0",
+  "description": "Store and share any size of file over Discord forever.",
+  "main": "index.js",
+  "author": "Darshan Patel <lazy14k@gmail.com>",
+  "license": "ISC",
+  "engines": {
+    "node": "14.16.1",
+    "npm": "6.14.12"
+  },
+  "bin": "bin/downloader.js",
+  "devDependencies": {
+    "eslint": "^5.15.3",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
+  },
+  "pkg": {
+    "outputPath": "dist"
+  },
+  "dependencies": {
+    "cli-progress": "^3.9.0",
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0",
+    "lodash": "^4.17.21",
+    "ora": "^5.4.0",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9",
+    "stream-chunker": "^1.2.8",
+    "through2": "^4.0.2",
+    "yargs": "^16.2.0"
+  }
+}

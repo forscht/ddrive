@@ -1,0 +1,13 @@
+bin/pm2.yaml
+.idea/
+node_modules/
+.vscode/
+.history/
+.DS_Store
+test/coverage/
+milestones.txt
+log.csv
+!**/.keep
+runtime/customer_logs/
+.env
+dist

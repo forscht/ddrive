@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head><title>DDrive - Store and share any size of file over Discord forever.</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta property="og:title" content="DDrive" />
+    <meta property="og:url" content="https://disfs.herokuapp.com/" />
+    <meta property="og:image" content="https://cdn.discordapp.com/attachments/824744543231934535/833395615974948864/favicon-1.png" />
+    <meta property="og:description" content="Store and share any size of file over Discord forever!" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Press+Start+2P&family=Zilla+Slab+Highlight:wght@700&display=swap"
+          rel="stylesheet">
+    <style>
+        *, * :after, * :before {
+            box-sizing: border-box
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: auto;
+            font-family: sans-serif
+        }
+
+        body.drag::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: rgba(248, 40, 59, 0.3);
+            border: 5px #f8283b dashed
+        }
+        /* For Firefox */
+        progress::-moz-progress-bar {
+            background: #f8283b;
+        }
+
+        /* For Chrome or Safari */
+        progress::-webkit-progress-value {
+            background: #f8283b;
+        }
+
+        /* For IE10 */
+        progress {
+            background: #f8283b;
+        }
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 20px 0;
+            color: #7d868c
+        }
+
+        section {
+            margin: 50px 0
+        }
+
+        #Logo {
+            display: inline-block;
+            position: relative;
+            margin-bottom: 10px;
+            font-size: 40px;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .logo img {
+            margin: 0;
+            height: 50px
+        }
+
+        .subtitle {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #7d868c
+        }
+
+        #D {
+            color: #f8283b;
+        }
+
+        a:link, a:visited {
+            color: #f8283b;
+            text-decoration: none
+        }
+
+        a:hover, a:focus, a:active {
+            text-decoration: underline
+        }
+
+        label {
+            margin-right: 10px
+        }
+
+        input, button {
+            font-size: 16px
+        }
+
+        input[name=torrentId] {
+            width: 300px
+        }
+
+        .log, .speed {
+            font-family: monospace;
+            font-size: 14px
+        }
+
+        .speed:not(:empty) {
+            padding: 20px;
+            margin: 10px 0;
+            background: #eee
+        }
+
+        .log p {
+            margin: 0;
+            word-break: break-word
+        }
+
+        footer {
+            margin: 30px 0;
+            font-size: .8em;
+            color: #7d868c
+        }
+
+        video, img, audio, iframe, object {
+            display: block
+        }
+
+        video, img, audio {
+            max-width: 100%;
+            margin: 10px 0
+        }
+
+        video {
+            min-width: 320px;
+            min-height: 180px
+        }
+
+        audio {
+            width: 100%;
+            height: 50px
+        }
+
+        iframe, object {
+            width: 1000px;
+            max-width: 100%;
+            height: 600px
+        }
+
+    </style>
+</head>
+<body>
+<main>
+    <h1 id="Logo"><span id="D">D</span>Drive</h1>
+    <p class="subtitle">Store and share any size of file over <a href="https://discord.com" target="_blank">Discord</a> forever.
+    </p>
+    <section><h1>Start Uploading</h1>
+
+        <p>Drag-and-drop Or choose a file:
+            <input type="file" id="file_input" name="upload" required>
+            <button type="submit" onclick="send()">Upload</button>
+        </p>
+        <label id="progress_bar_label" for="progress_bar" style="display: none">Uploading </label>
+        <progress id="progress_bar" value="0" max="100" style="display: none"></progress> <span id="message"></span>
+    </section>
+    <section><h1>Storage</h1>
+        {{PLACE_HOLDER}}
+        <p>Delete file:
+            <label>
+                <input id="deleteFileName" type="text" name="filename" required>
+            </label>
+            <button type="submit" onclick="deleteFile()">Delete</button>
+            <div id="deleteMessage"></div>
+        </p>
+    </section>
+    <footer><p><small>Powered by <a href="https://discord.com" target="_blank">Discord</a>. Works in Chrome, Firefox,
+        and Opera. Source code available on <a
+                href="https://github.com/Lazy14K/ddrive" target="_blank">GitHub</a>. © 2021 Lazy14K </small></p>
+    </footer>
+</main>
+<script>
+    const progress_bar = document.getElementById('progress_bar')
+    const progress_bar_label = document.getElementById('progress_bar_label')
+    const message = document.getElementById('message')
+    const deleteFileName = document.getElementById('deleteFileName')
+    const deleteMessage = document.getElementById('deleteMessage')
+
+    function humanFileSize(bytes, si=false, dp=1) {
+        const thresh = si ? 1000 : 1024;
+
+        if (Math.abs(bytes) < thresh) {
+            return bytes + ' B';
+        }
+
+        const units = si
+            ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+            : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+        let u = -1;
+        const r = 10**dp;
+
+        do {
+            bytes /= thresh;
+            ++u;
+        } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+
+
+        return bytes.toFixed(dp) + ' ' + units[u];
+    }
+
+    function setDeleteErrorMessage(msg){
+        deleteMessage.innerText = msg
+        message.style.color = '#f8283b'
+    }
+    function setDeleteMessage(msg) {
+        deleteMessage.innerText = msg
+    }
+    function deleteFile() {
+        const xhr = new XMLHttpRequest()
+        const path = location.href.replace(/\/$/, '') + '/' + deleteFileName.value
+        xhr.open('DELETE', path, true)
+        xhr.onload = function () {
+            if (xhr.status !== 200) {
+                setDeleteErrorMessage(`[Error] ${xhr.responseText}`)
+            }else {
+                window.location.reload()
+            }
+        }
+        xhr.onerror = function () {
+            hideProgress()
+            window.location.reload()
+        }
+        xhr.send()
+        deleteMessage.innerText = '[Info] Please wait while file is being deleted'
+    }
+
+    function setMessage(msg) {
+        message.innerText = msg
+    }
+
+    function setErrorMessage(msg){
+        message.innerText = msg
+        message.style.color = '#f8283b'
+    }
+    function setProgress(loaded, total) {
+        const progress = (total === 0) ? 0 : loaded / total * 100
+        progress_bar.value = progress
+        setMessage(humanFileSize(loaded) + '(' + progress.toFixed(2) + '%)')
+    }
+
+    function hideProgress() {
+        progress_bar.style.display = 'none'
+        progress_bar_label.style.display = 'none'
+    }
+
+    function send() {
+        // Select body (text or file)
+        const body = window.file_input.files[0]
+
+        // Send
+        const xhr = new XMLHttpRequest()
+        const path = location.href.replace(/\/$/, '') + '/' + body.name
+        xhr.open('POST', path, true)
+
+        // Update progress bar
+        xhr.upload.onprogress = function (e) {
+            setProgress(e.loaded, e.total)
+        }
+        xhr.upload.onload = function (e) {
+            // Send finished
+            if (xhr.status === 200) {
+                setProgress(e.loaded, e.total)
+            }
+        }
+        xhr.onload = function () {
+            // Status code error
+            if (xhr.status !== 200) {
+                setErrorMessage(`[Error] ${xhr.responseText}`)
+                hideProgress()
+            }else {
+                window.location.reload()
+            }
+        }
+        xhr.onerror = function () {
+            hideProgress()
+            window.location.reload()
+        }
+        xhr.send(body)
+        // Show progress bar
+        progress_bar.style.removeProperty('display')
+        progress_bar_label.style.removeProperty('display')
+    }
+
+</script>
+</body>
+</html>
