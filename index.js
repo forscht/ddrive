@@ -112,28 +112,36 @@ const handleURI = (container, req, res) => {
 bot.build()
     .then((container) => {
         const onRequest = async (req, res) => {
-            if (req.url === '/favicon.ico') {
-                sendFavicon(req, res)
-            } else if (req.method === 'OPTIONS') {
-                res.writeHead(200, {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'GET, HEAD, POST, OPTIONS, DELETE',
-                    'Access-Control-Allow-Headers': 'Content-Type, Content-Disposition',
-                    'Access-Control-Max-Age': 86400,
-                    'Content-Length': 0,
-                })
-                res.end()
-            } else if (req.method === 'DELETE') {
-                await handleDelete(container, req, res)
-            } else if (req.method === 'POST') {
-                await handleUpload(container, req, res)
-            } else if (req.method === 'GET' && req.url.startsWith('/uri/')) {
-                await handleURI(container, req, res)
-            } else if (req.method === 'GET' && req.url !== '/') {
-                await handleDownload(container, req, res)
-            } else if (req.method === 'GET') {
-                res.writeHead(200, { Connection: 'close' })
-                res.end(generateHomepage(container))
+            try {
+                if (req.url === '/favicon.ico') {
+                    sendFavicon(req, res)
+                } else if (req.method === 'OPTIONS') {
+                    res.writeHead(200, {
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Methods': 'GET, HEAD, POST, OPTIONS, DELETE',
+                        'Access-Control-Allow-Headers': 'Content-Type, Content-Disposition',
+                        'Access-Control-Max-Age': 86400,
+                        'Content-Length': 0,
+                    })
+                    res.end()
+                } else if (req.method === 'DELETE') {
+                    await handleDelete(container, req, res)
+                } else if (req.method === 'POST') {
+                    await handleUpload(container, req, res)
+                } else if (req.method === 'GET' && req.url.startsWith('/uri/')) {
+                    await handleURI(container, req, res)
+                } else if (req.method === 'GET' && req.url !== '/') {
+                    await handleDownload(container, req, res)
+                } else if (req.method === 'GET') {
+                    res.writeHead(200, { Connection: 'close' })
+                    res.end(generateHomepage(container))
+                } else {
+                    res.writeHead(404)
+                    res.end('not found')
+                }
+            } catch (err) {
+                res.writeHead(500)
+                res.end('internal server error')
             }
         }
 
