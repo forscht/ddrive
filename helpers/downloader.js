@@ -9,7 +9,8 @@ module.exports = async (stream, files, fileName) => {
         // eslint-disable-next-line no-restricted-syntax
         for (const file of files) {
             const data = await request.get(file, { encoding: null })
-            stream.write(data)
+
+            if (!stream.write(data)) await new Promise(resolve => stream.once('drain', resolve))
         }
         stream.end()
         spinner.succeed(`downloaded ${fileName}`)
