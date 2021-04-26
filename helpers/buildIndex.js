@@ -16,22 +16,34 @@ module.exports = async (channel) => {
         })
     }
     channel.messages.cache.concat(messages)
-    messages = messages
-        .map(message => (message.attachments.first() ? message.attachments.first().url : null))
-        .filter(attachment => attachment !== null)
 
-    messages = groupBy(messages, (message) => {
-        const baseName = path.basename(message).split('.')
+    /** Filter messages without attachment and convert Collection to attachment * */
+    const attachments = messages
+        .filter(message => message.attachments.size !== 0)
+        .map(message => message.attachments.first())
+    /** Get total files size and files count * */
+    const dataSize = attachments.reduce((size, attachment) => size + attachment.size, 0)
+    const { length } = attachments
+
+    /** Group by files * */
+    let attachmentsGroups = groupBy(attachments, (attachment) => {
+        const baseName = path.basename(attachment.url).split('.')
         baseName.splice(-1, 1)
 
         return baseName.join('.')
     })
 
-    messages = mapValues(messages, files => sortBy(files, (file) => {
-        const separator = path.basename(file).split('.').splice(-1, 1)[0]
+    /** Extract extra data and sort files* */
+    attachmentsGroups = mapValues(attachmentsGroups, (attachmentGroup) => {
+        const sortedFiles = sortBy(attachmentGroup.map(attachment => attachment.url), (URL) => {
+            const separator = path.basename(URL).split('.').splice(-1, 1)[0]
 
-        return parseInt(separator, 10)
-    }))
+            return parseInt(separator, 10)
+        })
+        const attachmentGroupSize = attachmentGroup.reduce((size, attachment) => size + attachment.size, 0)
 
-    return messages
+        return { files: sortedFiles, size: attachmentGroupSize, length: attachmentGroup.length }
+    })
+
+    return { data: attachmentsGroups, meta: { size: dataSize, length } }
 }

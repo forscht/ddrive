@@ -17,7 +17,7 @@ module.exports = async (stream, fileName, channel) => {
 
     return new Promise((resolve, reject) => {
         stream /** On request abort delete all the messages and resolve* */
-            .on('aborted', () => handleAbort(resolve))
+            .on('aborted', () => handleAbort(reject))
             .pipe(chunker)
             .pipe(through2(async (data, encoding, callback) => {
                 try {
@@ -35,7 +35,11 @@ module.exports = async (stream, fileName, channel) => {
                 let uploadedFileName = uploadedMessage[0].attachments.first().name.split('.')
                 uploadedFileName.splice(-1, 1)
                 uploadedFileName = uploadedFileName.join('.')
-                resolve({ name: uploadedFileName, files: uploadedMessage.map(message => message.attachments.first().url) })
+                resolve({
+                    name: uploadedFileName,
+                    files: uploadedMessage.map(message => message.attachments.first().url),
+                    size: uploadedMessage.reduce((size, message) => size + message.attachments.first().size, 0),
+                })
             })
             .on('error', () => handleAbort(reject))
     })
