@@ -79,6 +79,7 @@ const handleDownload = async (container, req, res) => {
     } else {
         downloadLock.add(fileName)
         res.status = 200
+        res.writeHead(200, { 'Content-Length': database.data[fileName].size })
         await downloader(res, database.data[fileName].files, fileName)
         downloadLock.delete(fileName)
     }
