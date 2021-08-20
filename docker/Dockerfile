@@ -7,15 +7,19 @@ ENV NODE_ENV production
 WORKDIR /app
 
 # Copy project files
-COPY --chown=node:node . /app
+COPY --chown=node:node .. /app
 
 # Install packages
 RUN npm install
+
+# Copy entrypoint
+# to be able to pass process argv
+COPY docker/entrypoint /
+
+RUN chmod +x /entrypoint
 
 # Set user as node
 USER node
 
 # Start app
-ENTRYPOINT ["node", "/app/index.js"]
-# Pass commmand line arguments to app
-CMD ["$*"]
+ENTRYPOINT ["/entrypoint"]

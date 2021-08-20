@@ -1,6 +1,6 @@
 node_modules
 config.json
 .dockerignore
-Dockerfile
+docker/Dockerfile
 .git
 .gitignore
