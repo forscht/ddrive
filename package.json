@@ -6,7 +6,8 @@
   "author": "Darshan Patel <lazy14k@gmail.com>",
   "license": "ISC",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "lint": "eslint --ext mjs,js,ts"
   },
   "engines": {
     "node": "16.x"
