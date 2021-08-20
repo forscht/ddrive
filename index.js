@@ -58,7 +58,7 @@ startApp()
     .then()
     .catch((err) => {
         const appDebug = debug('app')
-        if (err.message.includes('Unknown Channel')) appDebug(`=== APP CRASHED :: INVALID STORAGE_CHANNEL_ID`)
+        if (err.message.includes('Unknown Channel')) appDebug(`=== APP CRASHED :: INVALID CHANNEL_ID`)
         else if (err.message.includes('Unauthorized')) appDebug('=== APP CRASHED :: INVALID TOKEN')
         else appDebug('=== APP CRASHED :: UNKNOWN ERROR === \n', err)
     })
