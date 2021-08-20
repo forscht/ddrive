@@ -6,7 +6,9 @@ const Util = require('./util')
 
 class HttpServer {
     constructor(discordFS, opts = {}) {
-        this.serverPort = opts.serverPort || 8080
+        if (!opts.httpPort) debug('WARNING :: HTTP port not defined using default port :', 8080)
+        this.httpPort = opts.httpPort || 8080
+        if (!opts.auth) debug('WARNING :: Auth not defined starting server without auth')
         this.auth = opts.auth
         this.discordFS = discordFS
         this.loadStaticFiles()
@@ -17,8 +19,9 @@ class HttpServer {
      */
     build() {
         this.server = http.createServer(this.requestHandler.bind(this))
-        this.server.listen(this.serverPort, () => {
-            debug('http server listening on => ', this.serverPort)
+        this.server.listen(this.httpPort, () => {
+            debug('http server listening on => ', this.httpPort)
+            if (this.auth) debug('auth :: ', this.auth)
         })
     }
 

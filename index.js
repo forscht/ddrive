@@ -1,37 +1,64 @@
-require('dotenv').config()
 const debug = require('debug')
+const yargs = require('yargs/yargs')(process.argv.slice(2))
 const DiscordFS = require('./src/discordFS')
 const HTTPServer = require('./src/httpServer')
 
-debug.enable('*')
-const options = {
-    discordFS: {
-        token: process.env.TOKEN,
-        channelId: process.env.STORAGE_CHANNEL_ID,
-    },
-    HTTPServer: {
-        serverPort: process.env.SERVER_PORT,
-        auth: process.env.SERVER_AUTH,
-    },
-};
+debug.enable('*') // Enable logging
 
-/**
- * App entrypoint
- */
-(async () => {
-    /**
-     * Create DiscordFS
-     * @type {DiscordFS}
-     */
-    const discordFS = new DiscordFS(options.discordFS)
-    /**
-     * Build file index
-     */
-    await discordFS.buildIndex()
-    /**
-     * Create and start Http server
-     * @type {HttpServer}
-     */
-    const httpServer = new HTTPServer(discordFS, options.HTTPServer)
+// Parse option
+// Env vars will be parsed as option
+// ie DDRIVE_HTTP_PORT will be parsed as httpPort
+const args = yargs
+    .env('DDRIVE')
+    .option('httpPort', {
+        alias: 'P',
+        describe: 'Port of HTTP server',
+        type: 'number',
+    })
+    .option('auth', {
+        alias: 'A',
+        describe: 'Username password separated by ":". ie - admin:password',
+        type: 'string',
+    })
+    .option('token', {
+        alias: 'T',
+        describe: 'Discord bot/user token',
+        required: true,
+        type: 'string',
+    })
+    .option('channelId', {
+        alias: 'C',
+        describe: 'Text channel id where data will be stored',
+        required: true,
+        type: 'string',
+    })
+    .config()
+    .argv
+
+// Extract arguments
+const {
+    token, auth, channelId, httpPort,
+} = args
+
+//
+// App entry point
+//
+const startApp = async () => {
+    // Boot discordFS
+    const discordFS = new DiscordFS({ token, channelId })
+    await discordFS.buildIndex() // Build file index
+
+    // Create HTTP Server
+    const httpServer = new HTTPServer(discordFS, { httpPort, auth })
     httpServer.build()
-})()
+}
+
+// Start app
+startApp()
+    .then()
+    .catch((err) => {
+        const appDebug = debug('app')
+        if (err.message.includes('Unknown Channel')) appDebug(`=== APP CRASHED :: INVALID STORAGE_CHANNEL_ID`)
+        else if (err.message.includes('Unauthorized')) appDebug('=== APP CRASHED :: INVALID TOKEN')
+        else appDebug('=== APP CRASHED :: UNKNOWN ERROR === \n', err)
+    })
