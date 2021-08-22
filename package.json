@@ -1,5 +1,5 @@
 {
-  "name": "ddrive",
+  "name": "@forscht/ddrive",
   "version": "2.1.0",
   "description": "A lightweight cloud storage system using discord as storage device written in nodejs",
   "main": "bin/ddrive",
@@ -37,5 +37,6 @@
     "stream-chunker": "^1.2.8",
     "through2": "^4.0.2",
     "yargs": "^17.1.1"
-  }
+  },
+  "keywords": ["discord","filesystem","channel","server","http server","discord file system","discord strage"]
 }

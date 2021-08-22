@@ -23,7 +23,7 @@
 ### Installation
 #### Using NPM
 ```shell
-npm install -g ddrive
+npm install -g @forscht/ddrive
 ddrive --token <bot token> --channelId <guild channel id>
 # Open http://localhost:8080 in browser
 # use <ddrive help> for more info
