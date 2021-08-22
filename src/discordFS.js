@@ -226,9 +226,9 @@ class DiscordFS {
      * @return {Number}
      */
     getTotalFSSize() {
-        const allAttachments = Object.values(this.filesIndex)
+        const allFiles = Object.values(this.filesIndex)
 
-        return allAttachments.map((file) => file.attachments.reduce((size, attachment) => size + attachment.size, 0))
+        return allFiles.map((file) => file.attachments.reduce((size, attachment) => size + attachment.size, 0))
             .reduce((totalSize, fileSize) => totalSize + fileSize, 0)
     }
 

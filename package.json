@@ -25,6 +25,7 @@
     "request-promise-native": "^1.0.9",
     "stream-chunker": "^1.2.8",
     "through2": "^4.0.2",
+    "uuid": "^8.3.2",
     "yargs": "^17.1.1"
   }
 }

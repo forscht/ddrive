@@ -39,6 +39,19 @@ class DiscordAPI {
     }
 
     /**
+     * Send message on channel
+     * @param {String} channelId
+     * @param {Object} body
+     * @param {Buffer[]} attachments
+     * @return {Promise<*>}
+     */
+    async sendMessage(channelId, body, attachments = []) {
+        const endpoint = `/channels/${channelId}/messages`
+
+        return this.rest.post(endpoint, { attachments, body })
+    }
+
+    /**
      * Delete message for given messageId
      * @param {String} channelId
      * @param {String} messageId
