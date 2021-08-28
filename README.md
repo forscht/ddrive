@@ -7,7 +7,7 @@
 
 ##### A lightweight cloud storage system using discord as storage device written in nodejs. Supports unlimited file size and unlimited storage, I've implemented it using node js streams with multi-part up & download.
 
-#### Current development branch `v2`
+#### Current development branch `2.x`
 
 ### Features
 - Theoretically unlimited file size thanks to splitting the file in 8mb chunks using nodejs streams API.
