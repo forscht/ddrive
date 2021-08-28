@@ -1,13 +1,24 @@
 {
-  "name": "ddrive",
-  "version": "2.0.0",
-  "description": "Store and share any size of file over Discord forever.",
-  "main": "index.js",
-  "author": "Darshan Patel <lazy14k@gmail.com>",
-  "license": "ISC",
+  "name": "@forscht/ddrive",
+  "version": "2.1.1",
+  "description": "A lightweight cloud storage system using discord as storage device written in nodejs",
+  "main": "bin/ddrive",
+  "author": "Darshan Patel <iroguesniper@gmail.com> (https://github.com/forscht/ddrive)",
+  "homepage": "https://github.com/forscht/ddrive",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/forscht/ddrive/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/forscht/ddrive.git"
+  },
   "scripts": {
-    "start": "node index.js",
+    "start": "node bin/ddrive",
     "lint": "eslint --ext mjs,js,ts"
+  },
+  "bin": {
+    "ddrive": "bin/ddrive"
   },
   "engines": {
     "node": "16.x"
@@ -27,5 +38,6 @@
     "through2": "^4.0.2",
     "uuid": "^8.3.2",
     "yargs": "^17.1.1"
-  }
+  },
+  "keywords": ["discord","filesystem","channel","server","http server","discord file system","discord strage"]
 }
