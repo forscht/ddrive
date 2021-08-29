@@ -8,6 +8,12 @@
     <a href="https://github.com/forscht/ddrive/actions/workflows/docker-publish.yml">
         <img src="https://github.com/forscht/ddrive/actions/workflows/docker-publish.yml/badge.svg">
     </a>
+    <a href="https://hub.docker.com/r/forscht/ddrive">
+        <img src="https://img.shields.io/docker/pulls/forscht/ddrive.svg?logo=docker">
+    </a>
+    <a href="https://hub.docker.com/r/forscht/ddrive">
+        <img src="https://img.shields.io/docker/v/forscht/ddrive?logo=docker">
+    </a>
     <a href="https://github.com/forscht/ddrive/actions/workflows/codeql-analysis.yml">
         <img src="https://github.com/forscht/ddrive/actions/workflows/codeql-analysis.yml/badge.svg">
     </a>
@@ -17,6 +23,7 @@
     <a href="https://github.com/forscht/ddrive/blob/v2/LICENSE">
         <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
     </a>
+
 </p>
 <br>
 
