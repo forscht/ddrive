@@ -29,9 +29,9 @@ class HttpServer {
      * Load static HTML files
      */
     loadStaticFiles() {
-        this.homePage = fs.readFileSync('./html/index.html')
+        this.homePage = fs.readFileSync(`${__dirname}/../html/index.html`)
             .toString()
-        this.favicon = fs.readFileSync('./html/favicon.ico')
+        this.favicon = fs.readFileSync(`${__dirname}/../html/favicon.ico`)
     }
 
     /**

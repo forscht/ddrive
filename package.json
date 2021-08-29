@@ -1,6 +1,6 @@
 {
   "name": "@forscht/ddrive",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A lightweight cloud storage system using discord as storage device written in nodejs",
   "main": "bin/ddrive",
   "author": "Darshan Patel <iroguesniper@gmail.com> (https://github.com/forscht/ddrive)",
@@ -38,5 +38,13 @@
     "through2": "^4.0.2",
     "yargs": "^17.1.1"
   },
-  "keywords": ["discord","filesystem","channel","server","http server","discord file system","discord strage"]
+  "keywords": [
+    "discord",
+    "filesystem",
+    "channel",
+    "server",
+    "http server",
+    "discord file system",
+    "discord strage"
+  ]
 }
