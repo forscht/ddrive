@@ -1,11 +1,27 @@
 <h1 align="center"> DDRIVE </h1>
 
-[![Lint](https://github.com/forscht/ddrive/actions/workflows/lint.yml/badge.svg)](https://github.com/forscht/ddrive/actions/workflows/lint.yml)
-[![Docker image](https://github.com/forscht/ddrive/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/forscht/ddrive/actions/workflows/docker-publish.yml)
-[![CodeQL](https://github.com/forscht/ddrive/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/forscht/ddrive/actions/workflows/codeql-analysis.yml)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/forscht/ddrive/blob/v2/LICENSE)
+<p align="center"><strong> A lightweight cloud storage system using discord as storage device written in nodejs.</strong></p>
+<p align="center">
+    <a href="https://github.com/forscht/ddrive/actions/workflows/lint.yml">
+        <img src="https://github.com/forscht/ddrive/actions/workflows/lint.yml/badge.svg">
+    </a>
+    <a href="https://hub.docker.com/r/forscht/ddrive">
+        <img src="https://img.shields.io/docker/v/forscht/ddrive?logo=docker">
+    </a>
+    <a href="https://hub.docker.com/r/forscht/ddrive">
+        <img src="https://img.shields.io/docker/pulls/forscht/ddrive.svg?logo=docker">
+    </a>
+    <a href="https://github.com/forscht/ddrive/actions/workflows/codeql-analysis.yml">
+        <img src="https://github.com/forscht/ddrive/actions/workflows/codeql-analysis.yml/badge.svg">
+    </a>
+    <a href="https://github.com/forscht/ddrive/blob/v2/LICENSE">
+        <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
+    </a>
 
-##### A lightweight cloud storage system using discord as storage device written in nodejs. Supports unlimited file size and unlimited storage, I've implemented it using node js streams with multi-part up & download.
+</p>
+<br>
+
+##### **DDrive** Supports unlimited file size and unlimited storage, I've implemented it using node js streams with multi-part up & download.
 
 #### Current development branch `2.x`
 
