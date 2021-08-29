@@ -1,8 +1,7 @@
 const debug = require('debug')('http')
 const http = require('http')
 const path = require('path')
-const fs = require('fs')
-const Util = require('./util')
+const Util = require('./utils/util')
 
 class HttpServer {
     constructor(discordFS, opts = {}) {
@@ -11,7 +10,6 @@ class HttpServer {
         if (!opts.auth) debug('WARNING :: Auth not defined starting server without auth')
         this.auth = opts.auth
         this.discordFS = discordFS
-        this.loadStaticFiles()
     }
 
     /**
@@ -23,15 +21,6 @@ class HttpServer {
             debug('http server listening on => ', this.httpPort)
             if (this.auth) debug('auth :: ', this.auth)
         })
-    }
-
-    /**
-     * Load static HTML files
-     */
-    loadStaticFiles() {
-        this.homePage = fs.readFileSync('./html/index.html')
-            .toString()
-        this.favicon = fs.readFileSync('./html/favicon.ico')
     }
 
     /**
@@ -108,21 +97,6 @@ class HttpServer {
         const [username, password] = credentials.split(':')
 
         return !(username !== USERNAME || password !== PASSWORD)
-    }
-
-    /**
-     * Homepage handler
-     * @param req
-     * @param res
-     * @return {Promise<void>}
-     */
-    async homepageHandler(req, res) {
-        let files = Object.keys(this.discordFS.filesIndex)
-        files = files.map((file) => `<p><a href="/${file}">${file}</a></p>`)
-        const homepageHTML = this.homePage.replace('{{PLACE_HOLDER}}', files.join('\n'))
-            .replace('{{SIZE}}', Util.humanReadableSize(this.discordFS.getTotalFSSize()))
-        res.writeHead(200, { Connection: 'close' })
-        res.end(homepageHTML)
     }
 
     /**

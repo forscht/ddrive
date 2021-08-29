@@ -11,6 +11,7 @@ module.exports = {
         'import',
     ],
     rules: {
+        'no-underscore-dangle': 'off',
         'newline-before-return': 'error',
         'consistent-return': 'error',
         'no-else-return': ['error', { allowElseIf: false }],

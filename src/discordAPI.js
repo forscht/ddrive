@@ -3,62 +3,50 @@ const querystring = require('querystring')
 
 class DiscordAPI {
     /**
-     * Creates discord rest API wrapper
-     * @param token
+     * Create discord API wrapper
+     * @param opts
      */
-    constructor(token) {
-        this.rest = new REST({ version: 9 }).setToken(token)
-    }
-
-    /**
-     * Send message with single attachment
-     * @param {String} channelId
-     * @param {Buffer} attachment
-     * @param {Object} body
-     * @return {Promise<*>}
-     */
-    async sendSingleAttachmentMessage(channelId, attachment, body = {}) {
-        const endpoint = `/channels/${channelId}/messages`
-
-        return this.rest.post(endpoint, {
-            attachments: [attachment],
-            body,
-        })
+    constructor(opts) {
+        this.channelId = opts.channelId
+        this.rest = new REST({ version: 9 }).setToken(opts.token)
     }
 
     /**
      * Fetch messages
-     * @param {String} channelId
      * @param {Object} query
      * @return {Promise<*>}
      */
-    async fetchMessages(channelId, query) {
-        const endpoint = `/channels/${channelId}/messages`
+    async fetchMessages(query) {
+        const endpoint = `/channels/${this.channelId}/messages`
 
         return this.rest.get(endpoint, { query: querystring.encode(query) })
     }
 
     /**
      * Send message on channel
-     * @param {String} channelId
-     * @param {Object} body
-     * @param {Buffer[]} attachments
+     * @param {Object|String} content
+     * @param {Object[]} attachments
      * @return {Promise<*>}
      */
-    async sendMessage(channelId, body, attachments = []) {
-        const endpoint = `/channels/${channelId}/messages`
+    async createMessage(content, attachments = []) {
+        const endpoint = `/channels/${this.channelId}/messages`
+        const requestData = {
+            attachments,
+            body: {
+                content: typeof content === 'string' ? content : JSON.stringify(content),
+            },
+        }
 
-        return this.rest.post(endpoint, { attachments, body })
+        return this.rest.post(endpoint, requestData)
     }
 
     /**
      * Delete message for given messageId
-     * @param {String} channelId
      * @param {String} messageId
      * @return {Promise<*>}
      */
-    async deleteMessage(channelId, messageId) {
-        const endpoint = `/channels/${channelId}/messages/${messageId}`
+    async deleteMessage(messageId) {
+        const endpoint = `/channels/${this.channelId}/messages/${messageId}`
 
         return this.rest.delete(endpoint)
     }

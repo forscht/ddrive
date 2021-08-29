@@ -1,3 +1,4 @@
+const https = require('https')
 const debugError = require('debug')('error')
 
 class Util {
@@ -44,6 +45,35 @@ class Util {
         } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1)
 
         return `${bytes.toFixed(dp)} ${units[u]}`
+    }
+
+    /**
+     * Download file using native https library
+     * @param {String} url
+     * @return {Promise<Buffer>}
+     */
+    static downloadFile(url) {
+        return new Promise((resolve, reject) => {
+            const chunks = []
+            https.get(url, (res) => {
+                res.on('data', (data) => chunks.push(data))
+                res.on('error', (err) => reject(err))
+                res.on('end', () => resolve(Buffer.concat(chunks)))
+            })
+        })
+    }
+
+    /**
+     * Safe parse JSON string
+     * @param {String} string
+     * @return {undefined|any}
+     */
+    static safeParse(string) {
+        try {
+            return JSON.parse(string)
+        } catch (err) {
+            return undefined
+        }
     }
 }
 
