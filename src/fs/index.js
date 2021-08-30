@@ -117,7 +117,7 @@ class DiscordFS {
         const directoryName = Util.normalizePath(path.dirname(filePath))
         const fileName = path.basename(filePath)
         const directory = this.directories.find((d) => d.name === directoryName)
-        if (directory === null) return null
+        if (!directory) return undefined
 
         return this.files.find((f) => f.directoryId === directory.id && f.name === fileName)
     }
@@ -162,7 +162,6 @@ class DiscordFS {
      */
     async createFile(filePath, stream) {
         if (this.uploadLock.has(filePath)) this.throwError(`${filePath} upload is already in progress`, 'UPLOAD_IN_PRGORESS')
-        else this.uploadLock.add(filePath)
         debug('>> [ADD] in progress :', filePath)
 
         // Throw error if directory exist on same file path
@@ -177,8 +176,8 @@ class DiscordFS {
 
         // Check if file already exist
         const fileExist = this.files.find((f) => f.directoryId === directory.id && f.name === fileName)
-        if (fileExist) throw new Error('File already exist')
-
+        if (fileExist) this.throwError('File already exist', 'FILE_EXIST')
+        this.uploadLock.add(filePath)
         // Create new file and upload
         const file = new File({ directoryId: directory.id, name: fileName, createdAt: Date.now() })
         let partNumber = 0
@@ -193,7 +192,7 @@ class DiscordFS {
         // Delete all messages if file is failed to upload
         const handleAbort = async (cb, err) => {
             await Promise.all(file.parts.map(async (p) => this.discordAPI.deleteMessage(p.mid)))
-            this.uploadLock.delete(fileName)
+            this.uploadLock.delete(filePath)
             cb(err)
         }
 
@@ -206,7 +205,7 @@ class DiscordFS {
                 .on('finish', () => {
                     this.files.push(file)
                     debug('>> [ADD] completed   :', fileName)
-                    this.uploadLock.delete(fileName)
+                    this.uploadLock.delete(filePath)
                     resolve(file)
                 })
                 .on('error', (err) => handleAbort(reject, err))
@@ -252,6 +251,7 @@ class DiscordFS {
                 .map(async (messageId) => this.discordAPI.deleteMessage(messageId).catch(() => {})), // PP hihi
         )
         this.files = this.files.filter((f) => f.id !== file.id)
+        debug('>> [RM] complete    :', file.name)
     }
 
     /**

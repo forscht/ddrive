@@ -1,16 +1,18 @@
 <!DOCTYPE html>
+
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head><title>DDrive - A lightweight cloud storage system using discord as storage device written in nodejs.</title>
     <meta charset="utf-8">
-    <meta property="og:title" content="DDrive" />
-    <meta property="og:url" content="https://disfs.herokuapp.com/" />
-    <meta property="og:image" content="https://cdn.discordapp.com/attachments/824744543231934535/833395615974948864/favicon-1.png" />
-    <meta property="og:description" content="Store and share any size of file over Discord forever!" />
+    <meta name="theme-color" content="#0d1117"/>
+    <meta name="description"
+          content="A lightweight cloud storage system using discord as storage device written in nodejs."/>
+    <meta property="og:title" content="DDrive"/>
+    <meta property="og:url" content="https://disfs.herokuapp.com/"/>
+    <meta property="og:image"
+          content="https://cdn.discordapp.com/attachments/824744543231934535/833395615974948864/favicon-1.png"/>
+    <meta property="og:description" content="Store and share any size of file over Discord forever!"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
-    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Press+Start+2P&family=Zilla+Slab+Highlight:wght@700&display=swap"
-          rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -25,38 +27,136 @@
         }
 
         div.main {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px 20px 0;
-            color: #c9d1d9
+            max-width: 45rem;
+            margin: auto 0.8rem;
+            display: flex;
+            flex-direction: column;
+            top: 3rem;
+            position: relative;
+            min-height: 70%;
         }
-        div.container {
+
+        div.title {
+            display: flex;
+            flex-direction: column;
+            border-radius: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        #title-label {
+            font-size: 50px;
+            color: #c9d1d9;
+            padding-left: 0.2rem;
+            font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+
+        }
+
+        #title-description {
+            font-size: 14px;
+            color: #9399a2;
+        }
+
+        div.file-browser-title {
             height: fit-content;
-            max-width: 40rem;
+            display: flex;
+            flex-direction: row;
+            position: relative;
+            margin-top: 5rem;
+            margin-bottom: 0.4rem;
+            align-items: center;
+            min-width: 0;
+        }
+
+        div.file-browser-title-text {
+            font-size: 21px;
+            color: #c9d1d9;
+            padding-left: 0.4rem;
+        }
+
+        div.file-browser-title-size {
+            font-size: 15px;
+            color: #9399a2;
+            padding-left: 0.5rem;
+            padding-top: 0.35rem;
+        }
+
+        button.upload {
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            background-color: #21262c;
+            border-radius: 0.3rem;
+            height: 1.5rem;
+            margin-left: auto;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            margin-right: 0.5rem;
+            font-size: 13px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        button.create-folder {
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            background-color: #21262c;
+            border-radius: 0.3rem;
+            height: 1.5rem;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            margin-right: 0.5rem;
+            font-size: 13px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        button.modal-create-folder {
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            background-color: #21262c;
+            border-radius: 0.3rem;
+            height: 1.5rem;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            margin-right: 0.5rem;
+            font-size: 13px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        #modal-create-folder-create {
+            margin-left: 1rem;
+        }
+
+        div.file-browser {
+            height: fit-content;
             display: flex;
             padding: 0 0 0 0;
             flex-direction: column;
             position: relative;
-            top: 5rem;
             bottom: 0;
             right: 0;
             left: 0;
             border-radius: 0.5rem;
-            margin: auto 3rem;
             border: 1px solid #30363d;
             align-items: stretch;
+            min-width: 0;
         }
 
-        div.header {
+        div.file-browser-header {
             display: flex;
             flex-direction: row;
             height: 2.2rem;
             align-items: center;
-            justify-content: flex-end;
             border-bottom: 1px solid #30363d;
         }
 
-        div.footer {
+        div.file-browser-footer {
             display: flex;
             flex-direction: row;
             height: 1.6rem;
@@ -65,206 +165,388 @@
             border-top: 1px solid #30363d;
         }
 
-        button.upload, button.delete {
-            color: #c9d1d9;
+        button.delete {
+            color: #f8283b;
             border: 1px solid #30363d;
             background-color: #21262c;
             border-radius: 0.3rem;
-            height: 1.6rem;
-            width: 9rem;
+            height: 1.4rem;
+            margin-left: auto;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
             margin-right: 0.5rem;
             font-size: 13px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            min-width: 0;
         }
-        button.delete {
+
+        button.delete-file {
             color: #f8283b;
+            border: 1px solid #30363d;
+            background-color: #21262c;
+            border-radius: 0.3rem;
+            height: 1.4rem;
+            margin-left: auto;
+            padding-left: 0.3rem;
+            padding-right: 0.3rem;
+            margin-right: 0.3rem;
+            font-size: 13px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            min-width: 0;
         }
+
         button:hover {
             background-color: #3a3e46;
         }
 
-        div.folder {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+        #search-button:hover {
+            background-color: #3a3e46;
+        }
+
+        div.folder-entry {
             height: 2.2rem;
             display: flex;
             flex-direction: row;
             align-items: center;
-            justify-content: space-evenly;
-            border-bottom: 1px solid #30363d;
             background-color: transparent;
         }
 
-        div.folder:hover, div.files:hover {
-            background-color: #2d323a;
-        }
-
-        div.files {
+        div.file-entry {
             height: 2.2rem;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: space-evenly;
+        }
+
+        div.folder-entry:hover, div.file-entry:hover {
+            background-color: #2d323a;
+        }
+
+        .entry:not(:last-child) {
             border-bottom: 1px solid #30363d;
         }
 
         a.name-of-file, a.name-of-folder {
             text-decoration: none;
             color: #c9d1d9;
-            width: 40%;
-            text-align: left;
-            position: relative;
-            right: 1.3rem;
+            padding-right: 1rem;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            min-width: 0;
             font-size: 14px;
-            /*right: 1.3rem;*/
         }
 
-        p.time-stamp {
-            width: 30%;
+        a.name-of-file:hover, a.name-of-folder:hover {
+            color: #58a6ff;
+        }
+
+        div.del-svg-image {
+            padding-top: 0.1rem;
+            margin-left: auto;
+        }
+
+        p.file-size {
             color: #c9d1d9;
-            text-align: right;
+            padding-right: 0.7rem;
+            padding-left: 0.6rem;
             font-size: 14px;
+            overflow: hidden;
+            white-space: nowrap;
         }
 
-        i {
-            padding-top: 0.15rem;
-            position: relative;
-            right: 2rem;
-            width: 2%;
-            z-index: 5555;
-        }
-
-        i img {
-            z-index: 555;
+        div.svg-image {
+            padding-left: 0.6rem;
+            align-content: center;
+            padding-right: 0.6rem;
         }
 
         #file-search-label {
+            display: none;
+            align-items: center;
             color: #c9d1d9;
             font-size: 14px;
             margin-left: 1rem;
+            margin-right: 1rem;
+            height: 1.6rem;
         }
 
-        #file-search:focus{
+        #search-button {
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            background-color: #21262c;
+            border-radius: 0.3rem;
+            height: 1.4rem;
+            width: 5rem;
+            margin-right: 0.2rem;
+            margin-left: 0.2rem;
+            font-size: 13px;
+        }
+
+        #file-search:focus {
             outline: none;
         }
+
         #file-search {
             color: #c9d1d9;
             border: 0 solid #30363d;
             background-color: #21262c;
-            /*border-radius: 0.3rem;*/
             height: 1.6rem;
             width: 100%;
-            margin-left: 20px;
             font-size: 13px;
+            padding-left: 0.5rem;
         }
 
-        #current-path{
+        #current-path {
             color: #c9d1d9;
         }
+
         ul.breadcrumb {
             padding: 10px 16px;
             list-style: none;
             alignment: bottom;
             font-weight: bold;
-            width: 100%;
-            /*background-color: #eee;*/
+            overflow: hidden;
+            overflow-x: auto;
+            white-space: nowrap;
         }
+
         ul.breadcrumb li {
             display: inline;
             font-size: 14px;
         }
-        ul.breadcrumb li+li:before {
+
+        ul.breadcrumb li + li:before {
             padding: 2px;
             color: #9399a2;
             content: "/";
         }
+
         ul.breadcrumb li a {
             color: #58a6ff;
             text-decoration: none;
+            display: inline-block;
         }
+
         ul.breadcrumb li a:hover {
             color: #01447e;
             text-decoration: underline;
         }
 
-        @media screen and (min-width: 730px) {
-            div.container {
-                margin: auto;
-                /*color: #f8283b;*/
-            }
+        .upload-file-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.8);
         }
 
-        @media screen and (min-width: 768px) {
-            a.name-of-file, a.name-of-folder {
-                position: relative;
-                right: 3.5rem;
-            }
+        div.progress-div {
+            display: flex;
+            color: #c9d1d9;
+            background-color: #0d1117;
+            margin: 10% auto;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            padding-left: 1rem;
+            border: 1px solid #888;
+            width: 30rem;
+            border-radius: 0.4rem;
+            align-content: center;
+        }
 
-            i {
-                position: relative;
-                right: 2rem;
+        #progress_bar_label {
+            padding-right: 1rem;
+        }
+
+        #message {
+            padding-left: 1rem;
+        }
+
+        /* For Firefox */
+        progress::-moz-progress-bar {
+            background: #f8283b;
+        }
+
+        /* For Chrome or Safari */
+        progress::-webkit-progress-value {
+            background: #f8283b;
+        }
+
+        /* For IE10 */
+        progress {
+            background: #f8283b;
+        }
+
+        #folder-input {
+            color: #c9d1d9;
+            border: 0 solid #30363d;
+            background-color: #21262c;
+            height: 1.6rem;
+            width: 60%;
+            font-size: 13px;
+            padding-left: 0.5rem;
+        }
+
+        @media screen and (min-width: 45rem) {
+            div.main {
+                margin: auto;
             }
         }
 
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <ul class="breadcrumb">
-            {{PATH_PLACE_HOLDER}}
-        </ul>
-        <button class="delete">Delete Directory</button>
+<div class="main">
+    <div class="title">
+        <h1 id="title-label"> DDrive </h1>
+        <p id="title-description">Lightweight cloud storage system using discord</p>
     </div>
-    {{DIRECTORY_ENTRIES}}
-    {{FILE_ENTRIES}}
-    <div class="footer">
-        <label for="file-search" id="file-search-label">Search</label>
-        <input type="search" id="file-search" name="q" aria-label="Search through site content">
+    <div class="file-browser-title">
+        <div class="file-browser-title-text">File Browser</div>
+        <div class="file-browser-title-size">{{TOTAL_FS_SIZE}}</div>
+        <input id='file-upload' type='file' hidden/>
+        <button class="upload" id="upload-button">Upload</button>
+        <button class="create-folder" id="create-folder">Create Folder</button>
+    </div>
+    <div class="file-browser" id="file-browser">
+        <div class="file-browser-header">
+            <ul class="breadcrumb">
+                {{PATH_PLACE_HOLDER}}
+            </ul>
+            <button class="delete" id="delete-folder-button">Delete Folder</button>
+        </div>
+        <div class="file-browser-footer entry">
+            <button id="search-button">Search</button>
+            <label for="file-search" id="file-search-label">Search</label>
+            <input type="text" id="file-search" aria-label="Search through site content"
+                   placeholder="Search for files / folders">
+        </div>
+        {{DIRECTORY_ENTRIES}}
+        {{FILE_ENTRIES}}
     </div>
 </div>
+
+<div class="upload-file-modal" id="upload-file-modal">
+
+    <div class="progress-div">
+        <label id="progress_bar_label" for="progress_bar" style="display: none">Upload progress</label>
+        <progress id="progress_bar" value="0" max="100" style="display: none"></progress>
+        <span id="message"></span>
+        <label for="folder-input" hidden></label>
+        <input type="text" id="folder-input" placeholder="Folder name" style="display: none">
+        <button id="modal-create-folder-create" class="modal-create-folder" style="display: none">Create</button>
+        <button id="modal-create-folder-cancel" class="modal-create-folder" style="display: none">Cancel</button>
+    </div>
+
+</div>
+
 <script>
     const progress_bar = document.getElementById('progress_bar')
     const progress_bar_label = document.getElementById('progress_bar_label')
     const message = document.getElementById('message')
-    const deleteFileName = document.getElementById('deleteFileName')
-    const deleteMessage = document.getElementById('deleteMessage')
+    const upload_button = document.getElementById('upload-button')
+    const file_input = document.getElementById('file-upload')
+    const file_browser = document.getElementById('file-browser')
+    const upload_file_modal = document.getElementById('upload-file-modal')
+    const create_folder_button = document.getElementById('create-folder')
+    const modal_create_folder_create = document.getElementById('modal-create-folder-create')
+    const modal_create_folder_cancel = document.getElementById('modal-create-folder-cancel')
+    const delete_folder_button = document.getElementById('delete-folder-button')
 
-    function humanFileSize(bytes, si=false, dp=1) {
-        const thresh = si ? 1000 : 1024;
+    delete_folder_button.addEventListener('click', function (){
+        deleteFolder()
+    })
+    modal_create_folder_cancel.addEventListener('click', function () {
+        upload_file_modal.style.display = 'none'
+        document.getElementById('folder-input').style.display = 'none'
+        const buttons = document.getElementsByClassName('modal-create-folder')
+        for (let i = 0; i < buttons.length; i += 1) {
+            buttons[i].style.display = 'none'
+        }
+    })
+
+    modal_create_folder_create.addEventListener('click', function (){
+        createFolder(document.getElementById('folder-input').value)
+        document.getElementById('folder-input').style.display = 'none'
+        const buttons = document.getElementsByClassName('modal-create-folder')
+        for (let i = 0; i < buttons.length; i += 1) {
+            buttons[i].style.display = 'none'
+        }
+    })
+
+    create_folder_button.addEventListener('click', function () {
+        upload_file_modal.style.display = 'block'
+        document.getElementById('folder-input').style.display = 'block'
+        const buttons = document.getElementsByClassName('modal-create-folder')
+        for (let i = 0; i < buttons.length; i += 1) {
+            buttons[i].style.display = 'block'
+        }
+    })
+
+    file_browser.addEventListener('click', (event) => {
+
+        const isFileDeleteButton = event.target.nodeName === 'BUTTON' && event.target.className === 'delete-file'
+        if (isFileDeleteButton) {
+            deleteFile(event.target.id)
+        }
+
+        console.dir(event.target.id)
+    })
+    file_input.addEventListener('change', function () {
+        send()
+    })
+    upload_button.addEventListener('click', function () {
+        file_input.click()
+    })
+
+    function humanFileSize(bytes, si = false, dp = 1) {
+        const thresh = si ? 1000 : 1024
 
         if (Math.abs(bytes) < thresh) {
-            return bytes + ' B';
+            return bytes + ' B'
         }
 
         const units = si
             ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-            : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-        let u = -1;
-        const r = 10**dp;
+            : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+        let u = -1
+        const r = 10 ** dp
 
         do {
-            bytes /= thresh;
-            ++u;
-        } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+            bytes /= thresh
+            ++u
+        } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1)
 
-
-        return bytes.toFixed(dp) + ' ' + units[u];
+        return bytes.toFixed(dp) + ' ' + units[u]
     }
 
-    function setDeleteErrorMessage(msg){
-        deleteMessage.innerText = msg
+    function setDeleteErrorMessage(msg) {
+        message.innerText = msg
         message.style.color = '#f8283b'
     }
-    function setDeleteMessage(msg) {
-        deleteMessage.innerText = msg
-    }
-    function deleteFile() {
+
+    function deleteFolder() {
+        upload_file_modal.style.display = 'block'
         const xhr = new XMLHttpRequest()
-        const path = location.href.replace(/\/$/, '') + '/' + deleteFileName.value
-        xhr.open('DELETE', path, true)
+        const path = location.href.replace(/\/$/, '')
+        console.log(path)
+        xhr.open('PURGE', path, true)
         xhr.onload = function () {
             if (xhr.status !== 200) {
                 setDeleteErrorMessage(`[Error] ${xhr.responseText}`)
-            }else {
+            } else {
                 window.location.reload()
             }
         }
@@ -273,17 +555,59 @@
             window.location.reload()
         }
         xhr.send()
-        deleteMessage.innerText = '[Info] Please wait while file is being deleted'
+        message.innerText = 'Please wait while folder is being deleted'
+    }
+
+    function createFolder(filePath) {
+        upload_file_modal.style.display = 'block'
+        const xhr = new XMLHttpRequest()
+        const path = location.href.replace(/\/$/, '') + '/' + filePath
+        console.log(path)
+        xhr.open('PUT', path, true)
+        xhr.onload = function () {
+            if (xhr.status !== 200) {
+                setDeleteErrorMessage(`[Error] ${xhr.responseText}`)
+            } else {
+                window.location.reload()
+            }
+        }
+        xhr.onerror = function () {
+            hideProgress()
+            window.location.reload()
+        }
+        xhr.send()
+        message.innerText = 'Please wait while folder is being created'
+    }
+
+    function deleteFile(filePath) {
+        upload_file_modal.style.display = 'block'
+        const xhr = new XMLHttpRequest()
+        const path = window.location.origin + filePath
+        xhr.open('DELETE', path, true)
+        xhr.onload = function () {
+            if (xhr.status !== 200) {
+                setDeleteErrorMessage(`[Error] ${xhr.responseText}`)
+            } else {
+                window.location.reload()
+            }
+        }
+        xhr.onerror = function () {
+            hideProgress()
+            window.location.reload()
+        }
+        xhr.send()
+        message.innerText = 'Please wait while file is being deleted'
     }
 
     function setMessage(msg) {
         message.innerText = msg
     }
 
-    function setErrorMessage(msg){
+    function setErrorMessage(msg) {
         message.innerText = msg
         message.style.color = '#f8283b'
     }
+
     function setProgress(loaded, total) {
         const progress = (total === 0) ? 0 : loaded / total * 100
         progress_bar.value = progress
@@ -297,8 +621,8 @@
 
     function send() {
         // Select body (text or file)
-        const body = window.file_input.files[0]
-
+        const body = file_input.files[0]
+        upload_file_modal.style.display = 'block'
         // Send
         const xhr = new XMLHttpRequest()
         const path = location.href.replace(/\/$/, '') + '/' + body.name
@@ -319,7 +643,7 @@
             if (xhr.status !== 200) {
                 setErrorMessage(`[Error] ${xhr.responseText}`)
                 hideProgress()
-            }else {
+            } else {
                 window.location.reload()
             }
         }

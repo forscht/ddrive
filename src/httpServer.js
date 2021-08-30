@@ -71,8 +71,18 @@ class HttpServer {
                 res.end()
             } else if (req.method === 'DELETE') {
                 await this.deleteFileHandler(req, res)
+            } else if (req.method === 'PURGE') {
+                await this.discordFS.rmdir(req.url)
+                res.writeHead(200)
+                res.end()
             } else if (req.method === 'POST') {
-                await this.uploadFileHandler(req, res)
+                await this.discordFS.createFile(req.url, req)
+                res.writeHead(303, { Connection: 'close', Location: '/' })
+                res.end()
+            } else if (req.method === 'PUT') {
+                await this.discordFS.mkdir(req.url)
+                res.writeHead(303, { Connection: 'close', Location: '/' })
+                res.end()
             } else if (req.method === 'GET') {
                 const file = this.discordFS.getFile(req.url)
                 const directory = this.discordFS.getDirectory(req.url)
@@ -96,6 +106,9 @@ class HttpServer {
                     res.writeHead(404)
                     res.end('not found')
                 }
+            } else {
+                res.writeHead(404)
+                res.end('not found')
             }
         } catch (err) {
             Util.errorPrint(err, {
@@ -148,45 +161,36 @@ class HttpServer {
         }
     }
 
-    /**
-     * Upload file handler
-     * @param req
-     * @param res
-     * @return {Promise<void>}
-     */
-    async uploadFileHandler(req, res) {
-        await this.discordFS.createFile(req.url, req)
-        res.writeHead(303, {
-            Connection: 'close',
-            Location: '/',
-        })
-        res.end()
-    }
-
     renderWeb(entries, reqPath) {
         const directoryEntries = entries.filter((entry) => entry.directory === true)
         const fileEntries = entries.filter((entry) => entry.directory === false)
 
-        const directoryHTML = directoryEntries.map((entry) => `<div class="folder">
-            <i>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 22 22" style="fill: #9399a2;">
-                    <path d="M20 5h-9.586L8.707 3.293A.997.997 0 0 0 8 3H4c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V7c0-1.103-.897-2-2-2z"></path>
-                </svg>
-            </i>
+        const directoryHTML = directoryEntries.map((entry) => `<div class="folder-entry entry">
+            <div class="svg-image">
+                <i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="19" viewBox="0 0 22 22"
+                         style="fill: #9399a2;">
+                        <path d="M20 5h-9.586L8.707 3.293A.997.997 0 0 0 8 3H4c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V7c0-1.103-.897-2-2-2z"></path>
+                    </svg>
+                </i>
+            </div>
             <a href="${path.join(reqPath, entry.name)}" class="name-of-folder">${entry.name}</a>
-            <p class="time-stamp">5555555555</p>
         </div>`)
             .join('\n')
 
-        const filesHTML = fileEntries.map((entry) => `<div class="files">
-        <i>
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 22 22" style="fill: #9399a2;">
-                <path d="M19.937 8.68c-.011-.032-.02-.063-.033-.094a.997.997 0 0 0-.196-.293l-6-6a.997.997 0 0 0-.293-.196c-.03-.014-.062-.022-.094-.033a.991.991 0 0 0-.259-.051C13.04 2.011 13.021 2 13 2H6c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V9c0-.021-.011-.04-.013-.062a.99.99 0 0 0-.05-.258zM16.586 8H14V5.414L16.586 8zM6 20V4h6v5a1 1 0 0 0 1 1h5l.002 10H6z"></path>
-            </svg>
-        </i>
-        <a href="${path.join(reqPath, entry.name)}" class="name-of-file">${entry.name}</a>
-        <p class="time-stamp">5555555555</p>
-    </div>`)
+        const filesHTML = fileEntries.map((entry) => `<div class="file-entry entry">
+            <div class="svg-image">
+                <i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="19" viewBox="0 0 22 22"
+                         style="fill: #9399a2;">
+                        <path d="M19.937 8.68c-.011-.032-.02-.063-.033-.094a.997.997 0 0 0-.196-.293l-6-6a.997.997 0 0 0-.293-.196c-.03-.014-.062-.022-.094-.033a.991.991 0 0 0-.259-.051C13.04 2.011 13.021 2 13 2H6c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V9c0-.021-.011-.04-.013-.062a.99.99 0 0 0-.05-.258zM16.586 8H14V5.414L16.586 8zM6 20V4h6v5a1 1 0 0 0 1 1h5l.002 10H6z"></path>
+                    </svg>
+                </i>
+            </div>
+            <a href="${path.join(reqPath, entry.name)}" class="name-of-file">${entry.name} </a>
+            <button class="delete-file" id="${path.join(reqPath, entry.name)}">Delete</button>
+            <p class="file-size">${Util.humanFileSize(entry.size)}</p>
+        </div>`)
             .join('\n')
 
         let directoryArray = Util.explodePath(reqPath)
@@ -198,11 +202,13 @@ class HttpServer {
         })
         const pathArray = reqPath.split('/')
         pathNavigationHTML[directoryArray.length - 1] = `<li id="current-path">${pathArray[pathArray.length - 1] || 'HOME'}</li>`
+        this.loadStaticFiles()
 
         return this.webPage
             .replace('{{DIRECTORY_ENTRIES}}', directoryHTML)
             .replace('{{FILE_ENTRIES}}', filesHTML)
             .replace('{{PATH_PLACE_HOLDER}}', pathNavigationHTML.join('\n'))
+            .replace('{{TOTAL_FS_SIZE}}', Util.humanFileSize(this.discordFS.size))
     }
 }
 
