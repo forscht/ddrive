@@ -30,7 +30,7 @@ class DiscordFS {
         this.mkdir = this.mkdir.bind(this)
         this.rm = this.rm.bind(this)
         this.rmdir = this.rmdir.bind(this)
-        this.ls = this.ls.bind(this)
+        this.list = this.list.bind(this)
     }
 
     /**
@@ -105,7 +105,7 @@ class DiscordFS {
      * @return {*}
      */
     getDirectory(directoryName) {
-        return this.directories.find((d) => d.name === this.normalizePath(directoryName))
+        return this.directories.find((d) => d.name === Util.normalizePath(directoryName))
     }
 
     /**
@@ -114,7 +114,7 @@ class DiscordFS {
      * @return {null|*}
      */
     getFile(filePath) {
-        const directoryName = this.normalizePath(path.dirname(filePath))
+        const directoryName = Util.normalizePath(path.dirname(filePath))
         const fileName = path.basename(filePath)
         const directory = this.directories.find((d) => d.name === directoryName)
         if (directory === null) return null
@@ -128,7 +128,7 @@ class DiscordFS {
      * @return {*[]}
      */
     getChildDirectories(directoryName) {
-        const normalizedDirectoryName = this.normalizePath(directoryName)
+        const normalizedDirectoryName = Util.normalizePath(directoryName)
         const children = []
         this.directories.forEach((item) => {
             if (item.name !== normalizedDirectoryName && item.name.startsWith(normalizedDirectoryName) && item.name.trim() !== '') {
@@ -170,7 +170,7 @@ class DiscordFS {
         if (existingDirectory) this.throwError(`${filePath} directory exist with same name`, 'DIR_EXIST')
 
         // Find or create directory
-        const directoryName = this.normalizePath(path.dirname(filePath))
+        const directoryName = Util.normalizePath(path.dirname(filePath))
         const fileName = path.basename(filePath)
         let directory = this.getDirectory(directoryName)
         if (!directory) directory = await this.mkdir(directoryName)
@@ -280,15 +280,14 @@ class DiscordFS {
      * @param directoryName
      * @return {Object[]}
      */
-    ls(directoryName) {
+    list(directoryName) {
         debug('>> [LS] in progress :', directoryName)
         const files = this.getFiles(directoryName).map((f) => ({
             name: f.name,
             size: f.size,
-            createdAt: f.createdAt,
             directory: false,
         }))
-        const directories = this.getChildDirectories(directoryName).map((d) => ({ name: d.name, createdAt: d.createdAt, directory: true }))
+        const directories = this.getChildDirectories(directoryName).map((d) => ({ name: d, directory: true }))
 
         return [...files, ...directories]
     }
@@ -301,7 +300,7 @@ class DiscordFS {
     async mkdir(name) {
         debug('>> [MKDIR] in progress :', name)
         // Create or return existing directory
-        const directoryName = this.normalizePath(name)
+        const directoryName = Util.normalizePath(name)
         if (name !== '/') {
             const baseDirectory = this.directories.find((d) => d.name === path.dirname(directoryName))
             if (!baseDirectory) await this.mkdir(path.dirname(directoryName))
@@ -317,18 +316,6 @@ class DiscordFS {
         this.directories.push(entry)
 
         return entry
-    }
-
-    /**
-     * Normalize path
-     * @param {String} p
-     * @return {string}
-     */
-    normalizePath(p) {
-        let r = path.posix.normalize(p.replace(/\\/g, '/'))
-        if (r.endsWith('/') && r !== '/') r = r.slice(0, -1)
-
-        return r.startsWith('/') ? r : `/${r}`
     }
 
     /**

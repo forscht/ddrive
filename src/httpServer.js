@@ -1,5 +1,6 @@
 const debug = require('debug')('http')
 const http = require('http')
+const fs = require('fs')
 const path = require('path')
 const Util = require('./utils/util')
 
@@ -10,6 +11,7 @@ class HttpServer {
         if (!opts.auth) debug('WARNING :: Auth not defined starting server without auth')
         this.auth = opts.auth
         this.discordFS = discordFS
+        this.loadStaticFiles()
     }
 
     /**
@@ -21,6 +23,15 @@ class HttpServer {
             debug('http server listening on => ', this.httpPort)
             if (this.auth) debug('auth :: ', this.auth)
         })
+    }
+
+    /**
+     * Load static HTML files
+     */
+    loadStaticFiles() {
+        this.webPage = fs.readFileSync(`${__dirname}/../html/index.html`)
+            .toString()
+        this.favicon = fs.readFileSync(`${__dirname}/../html/favicon.ico`)
     }
 
     /**
@@ -62,16 +73,35 @@ class HttpServer {
                 await this.deleteFileHandler(req, res)
             } else if (req.method === 'POST') {
                 await this.uploadFileHandler(req, res)
-            } else if (req.method === 'GET' && req.url !== '/') {
-                await this.downloadFileHandler(req, res)
             } else if (req.method === 'GET') {
-                await this.homepageHandler(req, res)
-            } else {
-                res.writeHead(404)
-                res.end('not found')
+                const file = this.discordFS.getFile(req.url)
+                const directory = this.discordFS.getDirectory(req.url)
+                if (file) {
+                    res.status = 200
+                    res.writeHead(200, {
+                        'Content-Length': file.size,
+                        'Content-Disposition': `attachment; filename="${file.name}"`,
+                    })
+                    await file.download(res)
+                } else if (directory) {
+                    const entries = this.discordFS.list(req.url)
+                    const webpage = this.renderWeb(entries, req.url)
+                    res.writeHead(200)
+                    res.end(webpage)
+                } else if (req.url === '/') {
+                    const webpage = this.renderWeb([], req.url)
+                    res.writeHead(200)
+                    res.end(webpage)
+                } else {
+                    res.writeHead(404)
+                    res.end('not found')
+                }
             }
         } catch (err) {
-            Util.errorPrint(err, { method: req.method, url: req.url })
+            Util.errorPrint(err, {
+                method: req.method,
+                url: req.url,
+            })
             if (err.code) {
                 res.writeHead(409)
                 res.end(err.message)
@@ -93,7 +123,8 @@ class HttpServer {
         }
         const [USERNAME, PASSWORD] = this.auth.split(':')
         const base64Credentials = req.headers.authorization.split(' ')[1]
-        const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii')
+        const credentials = Buffer.from(base64Credentials, 'base64')
+            .toString('ascii')
         const [username, password] = credentials.split(':')
 
         return !(username !== USERNAME || password !== PASSWORD)
@@ -106,9 +137,9 @@ class HttpServer {
      * @return {Promise<void>}
      */
     async deleteFileHandler(req, res) {
-        const fileName = path.basename(req.url)
-        if (this.discordFS.filesIndex[fileName]) {
-            await this.discordFS.deleteFile(fileName)
+        const file = this.discordFS.getFile(req.url)
+        if (file) {
+            await this.discordFS.rm(file)
             res.writeHead(200)
             res.end()
         } else {
@@ -124,28 +155,54 @@ class HttpServer {
      * @return {Promise<void>}
      */
     async uploadFileHandler(req, res) {
-        const filename = path.basename(req.url)
-        await this.discordFS.addFile(req, filename)
-        res.writeHead(303, { Connection: 'close', Location: '/' })
+        await this.discordFS.createFile(req.url, req)
+        res.writeHead(303, {
+            Connection: 'close',
+            Location: '/',
+        })
         res.end()
     }
 
-    /**
-     * Download file handler
-     * @param req
-     * @param res
-     * @return {Promise<void>}
-     */
-    async downloadFileHandler(req, res) {
-        const fileName = path.basename(req.url)
-        if (this.discordFS.filesIndex[fileName]) {
-            res.status = 200
-            res.writeHead(200, { 'Content-Length': this.discordFS.getFileSize(fileName) })
-            await this.discordFS.fetchFile(res, fileName)
-        } else {
-            res.status = 404
-            res.end('404 not found')
-        }
+    renderWeb(entries, reqPath) {
+        const directoryEntries = entries.filter((entry) => entry.directory === true)
+        const fileEntries = entries.filter((entry) => entry.directory === false)
+
+        const directoryHTML = directoryEntries.map((entry) => `<div class="folder">
+            <i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 22 22" style="fill: #9399a2;">
+                    <path d="M20 5h-9.586L8.707 3.293A.997.997 0 0 0 8 3H4c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V7c0-1.103-.897-2-2-2z"></path>
+                </svg>
+            </i>
+            <a href="${path.join(reqPath, entry.name)}" class="name-of-folder">${entry.name}</a>
+            <p class="time-stamp">5555555555</p>
+        </div>`)
+            .join('\n')
+
+        const filesHTML = fileEntries.map((entry) => `<div class="files">
+        <i>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 22 22" style="fill: #9399a2;">
+                <path d="M19.937 8.68c-.011-.032-.02-.063-.033-.094a.997.997 0 0 0-.196-.293l-6-6a.997.997 0 0 0-.293-.196c-.03-.014-.062-.022-.094-.033a.991.991 0 0 0-.259-.051C13.04 2.011 13.021 2 13 2H6c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V9c0-.021-.011-.04-.013-.062a.99.99 0 0 0-.05-.258zM16.586 8H14V5.414L16.586 8zM6 20V4h6v5a1 1 0 0 0 1 1h5l.002 10H6z"></path>
+            </svg>
+        </i>
+        <a href="${path.join(reqPath, entry.name)}" class="name-of-file">${entry.name}</a>
+        <p class="time-stamp">5555555555</p>
+    </div>`)
+            .join('\n')
+
+        let directoryArray = Util.explodePath(reqPath)
+        if (!directoryArray.length) directoryArray = ['/']
+        const pathNavigationHTML = directoryArray.map((directory) => {
+            const pathArray = directory.split('/')
+
+            return `<li><a href="${directory}">${pathArray[pathArray.length - 1] || 'HOME'}</a></li>`
+        })
+        const pathArray = reqPath.split('/')
+        pathNavigationHTML[directoryArray.length - 1] = `<li id="current-path">${pathArray[pathArray.length - 1] || 'HOME'}</li>`
+
+        return this.webPage
+            .replace('{{DIRECTORY_ENTRIES}}', directoryHTML)
+            .replace('{{FILE_ENTRIES}}', filesHTML)
+            .replace('{{PATH_PLACE_HOLDER}}', pathNavigationHTML.join('\n'))
     }
 }
 

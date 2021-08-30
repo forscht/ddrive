@@ -1,4 +1,5 @@
 const https = require('https')
+const path = require('path')
 const debugError = require('debug')('error')
 
 class Util {
@@ -64,6 +65,18 @@ class Util {
     }
 
     /**
+     * Normalize path
+     * @param {String} p
+     * @return {string}
+     */
+    static normalizePath(p) {
+        let r = path.posix.normalize(p.replace(/\\/g, '/'))
+        if (r.endsWith('/') && r !== '/') r = r.slice(0, -1)
+
+        return r.startsWith('/') ? r : `/${r}`
+    }
+
+    /**
      * Safe parse JSON string
      * @param {String} string
      * @return {undefined|any}
@@ -75,6 +88,23 @@ class Util {
             return undefined
         }
     }
+
+    /**
+     * Explode path with sub directories
+     * @param {String} p
+     * @return {string[]}
+     */
+    static explodePath(p) {
+        const pathArray = Util.normalizePath(p).split('/').filter((pe) => pe !== '')
+
+        const explodedArray = pathArray
+            .map((pe, index) => pathArray.slice(0, index + 1).join('/'))
+            .map((pe) => `/${pe}`)
+        explodedArray.unshift('/')
+
+        return explodedArray
+    }
 }
 
 module.exports = Util
+

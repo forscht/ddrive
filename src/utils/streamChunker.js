@@ -10,12 +10,6 @@ class StreamChunker extends Transform {
     }
 
     _transform(chunk, encoding, callback) {
-        if (!Buffer.isBuffer(chunk)) {
-            callback(Error('Received non-buffer chunk'))
-
-            return
-        }
-
         this.fill += chunk.length
         this.chunks.push(chunk)
         while (this.fill >= this.chunkSize) {

@@ -2,7 +2,7 @@
 
 const debug = require('debug')
 const yargs = require('yargs/yargs')(process.argv.slice(2))
-const DiscordFS = require('../src/discordFS')
+const DiscordFS = require('../src/fs/')
 const HTTPServer = require('../src/httpServer')
 
 debug.enable('*') // Enable logging
@@ -48,7 +48,7 @@ const {
 const startApp = async () => {
     // Boot discordFS
     const discordFS = new DiscordFS({ token, channelId })
-    await discordFS.buildIndex() // Build file index
+    await discordFS.load() // Build file index
 
     // Create HTTP Server
     const httpServer = new HTTPServer(discordFS, { httpPort, auth })

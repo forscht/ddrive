@@ -17,7 +17,7 @@ class File {
     }
 
     get urls() {
-        return this.parts.map((p) => p.url).sort((a, b) => a.partNumber - b.partNumber)
+        return this.parts.sort((a, b) => a.partNumber - b.partNumber).map((p) => p.url)
     }
 
     get messageIds() {
