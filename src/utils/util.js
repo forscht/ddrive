@@ -67,11 +67,13 @@ class Util {
     /**
      * Normalize path
      * @param {String} p
+     * @param {Boolean} addLastSlash
      * @return {string}
      */
-    static normalizePath(p) {
+    static normalizePath(p, addLastSlash = false) {
         let r = path.posix.normalize(p.replace(/\\/g, '/'))
         if (r.endsWith('/') && r !== '/') r = r.slice(0, -1)
+        if (!r.endsWith('/') && addLastSlash) r = `${r}/`
 
         return r.startsWith('/') ? r : `/${r}`
     }
@@ -132,6 +134,21 @@ class Util {
         } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1)
 
         return `${bytes.toFixed(dp)} ${units[u]}`
+    }
+
+    /**
+     * Sort array of object by key
+     * @param {Object[]} array
+     * @param {String} key
+     * @return {*}
+     */
+    static sortArrayByKey(array, key) {
+        return array.sort((a, b) => {
+            if (a[key] < b[key]) { return -1 }
+            if (a[key] > b[key]) { return 1 }
+
+            return 0
+        })
     }
 }
 

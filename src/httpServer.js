@@ -4,6 +4,15 @@ const fs = require('fs')
 const path = require('path')
 const Util = require('./utils/util')
 
+/**
+ * HTTP Server - API for discordFS
+ * GET - /Directory - Return HTML
+ * GET - /Directory/file.mp4 - Return file from discordFS
+ * PUT - /Directory1 - Create directory in discordFS
+ * POST - /Directory1/file1.mp4 - Create file in discordFS
+ * DELETE - /Directory1/file1.mp4 - Delete file
+ * DELETE - /Directory1 - Delete directory
+ */
 class HttpServer {
     constructor(discordFS, opts = {}) {
         if (!opts.httpPort) debug('WARNING :: HTTP port not defined using default port :', 8080)
@@ -55,6 +64,7 @@ class HttpServer {
 
             return
         }
+        const decodedURL = decodeURI(req.url)
 
         try {
             if (req.url === '/favicon.ico') {
@@ -70,36 +80,46 @@ class HttpServer {
                 })
                 res.end()
             } else if (req.method === 'DELETE') {
-                await this.deleteFileHandler(req, res)
+                await this.deleteResourceHandler(req, res)
             } else if (req.method === 'PURGE') {
                 await this.discordFS.rmdir(req.url)
                 res.writeHead(200)
                 res.end()
             } else if (req.method === 'POST') {
-                await this.discordFS.createFile(req.url, req)
-                res.writeHead(303, { Connection: 'close', Location: '/' })
+                await this.discordFS.createFile(decodedURL, req)
+                res.writeHead(303, {
+                    Connection: 'close',
+                    Location: '/',
+                })
                 res.end()
             } else if (req.method === 'PUT') {
-                await this.discordFS.mkdir(req.url)
-                res.writeHead(303, { Connection: 'close', Location: '/' })
+                await this.discordFS.mkdir(decodedURL)
+                res.writeHead(303, {
+                    Connection: 'close',
+                    Location: '/',
+                })
                 res.end()
+            } else if (req.method === 'GET' && decodedURL.startsWith('/find/')) {
+                const entries = this.discordFS.find(path.basename(decodedURL))
+                const webpage = this.renderWeb(entries, `/${path.basename(decodedURL)}`, true)
+                res.writeHead(200)
+                res.end(webpage)
             } else if (req.method === 'GET') {
-                const file = this.discordFS.getFile(req.url)
-                const directory = this.discordFS.getDirectory(req.url)
+                const file = this.discordFS.getFile(decodedURL)
+                const directory = this.discordFS.getDirectory(decodedURL)
                 if (file) {
-                    res.status = 200
                     res.writeHead(200, {
                         'Content-Length': file.size,
                         'Content-Disposition': `attachment; filename="${file.name}"`,
                     })
                     await file.download(res)
                 } else if (directory) {
-                    const entries = this.discordFS.list(req.url)
-                    const webpage = this.renderWeb(entries, req.url)
+                    const entries = this.discordFS.list(decodedURL)
+                    const webpage = this.renderWeb(entries, decodedURL)
                     res.writeHead(200)
                     res.end(webpage)
                 } else if (req.url === '/') {
-                    const webpage = this.renderWeb([], req.url)
+                    const webpage = this.renderWeb([], decodedURL)
                     res.writeHead(200)
                     res.end(webpage)
                 } else {
@@ -113,7 +133,7 @@ class HttpServer {
         } catch (err) {
             Util.errorPrint(err, {
                 method: req.method,
-                url: req.url,
+                url: decodedURL,
             })
             if (err.code) {
                 res.writeHead(409)
@@ -149,22 +169,30 @@ class HttpServer {
      * @param res
      * @return {Promise<void>}
      */
-    async deleteFileHandler(req, res) {
-        const file = this.discordFS.getFile(req.url)
+    async deleteResourceHandler(req, res) {
+        const decodedURL = decodeURI(req.url)
+        const file = this.discordFS.getFile(decodedURL)
         if (file) {
             await this.discordFS.rm(file)
             res.writeHead(200)
             res.end()
         } else {
-            res.writeHead(404)
-            res.end('404 not found')
+            await this.discordFS.rmdir(decodedURL)
+            res.writeHead(200)
+            res.end()
         }
     }
 
-    renderWeb(entries, reqPath) {
-        const directoryEntries = entries.filter((entry) => entry.directory === true)
-        const fileEntries = entries.filter((entry) => entry.directory === false)
-
+    /**
+     * Render webpage
+     * @param {Object[]} entries
+     * @param {String} reqPath
+     * @param {Boolean} find
+     * @return {string}
+     */
+    renderWeb(entries, reqPath, find = false) {
+        const directoryEntries = Util.sortArrayByKey(entries.filter((entry) => entry.directory === true), 'name')
+        const fileEntries = Util.sortArrayByKey(entries.filter((entry) => entry.directory === false), 'name')
         const directoryHTML = directoryEntries.map((entry) => `<div class="folder-entry entry">
             <div class="svg-image">
                 <i>
@@ -174,7 +202,8 @@ class HttpServer {
                     </svg>
                 </i>
             </div>
-            <a href="${path.join(reqPath, entry.name)}" class="name-of-folder">${entry.name}</a>
+            <a href="${find ? entry.name : path.join(reqPath, entry.name)}" class="name-of-folder">${find ? path.basename(entry.name) : entry.name}</a>
+            <button class="delete-file" id="${find ? entry.name : path.join(reqPath, entry.name)}">Delete</button>
         </div>`)
             .join('\n')
 
@@ -187,8 +216,8 @@ class HttpServer {
                     </svg>
                 </i>
             </div>
-            <a href="${path.join(reqPath, entry.name)}" class="name-of-file">${entry.name} </a>
-            <button class="delete-file" id="${path.join(reqPath, entry.name)}">Delete</button>
+            <a href="${path.join(find ? entry.path : reqPath, entry.name)}" class="name-of-file">${entry.name} </a>
+            <button class="delete-file" id="${path.join(find ? entry.path : reqPath, entry.name)}">Delete</button>
             <p class="file-size">${Util.humanFileSize(entry.size)}</p>
         </div>`)
             .join('\n')

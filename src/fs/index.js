@@ -18,7 +18,10 @@ class DiscordFS {
      */
     constructor(opts) {
         this.channelId = opts.channelId
-        this.discordAPI = new DiscordAPI({ token: opts.token, channelId: opts.channelId })
+        this.discordAPI = new DiscordAPI({
+            token: opts.token,
+            channelId: opts.channelId,
+        })
 
         this.chunkSize = 7864320
         this.files = []
@@ -34,6 +37,14 @@ class DiscordFS {
     }
 
     /**
+     * Get total fs size
+     * @return {Number}
+     */
+    get size() {
+        return this.files.reduce((t, f) => t + f.size, 0)
+    }
+
+    /**
      * Load file index from messages
      * @return {Promise<void>}
      */
@@ -45,7 +56,10 @@ class DiscordFS {
         while (channelMessages.length > 0) {
             // Parse message content and filter invalid message
             tempMessageCache.push(...channelMessages
-                .map((message) => ({ ...message, content: Util.safeParse(message.content) }))
+                .map((message) => ({
+                    ...message,
+                    content: Util.safeParse(message.content),
+                }))
                 .filter((message) => message !== undefined))
             // Get next messages
             // eslint-disable-next-line no-await-in-loop
@@ -128,7 +142,7 @@ class DiscordFS {
      * @return {*[]}
      */
     getChildDirectories(directoryName) {
-        const normalizedDirectoryName = Util.normalizePath(directoryName)
+        const normalizedDirectoryName = Util.normalizePath(directoryName, true)
         const children = []
         this.directories.forEach((item) => {
             if (item.name !== normalizedDirectoryName && item.name.startsWith(normalizedDirectoryName) && item.name.trim() !== '') {
@@ -137,6 +151,7 @@ class DiscordFS {
                 if (name.indexOf('/') === 0) name = name.substring(1)
                 if (!name.includes('/')) children.push(name)
             }
+            // if (this.isChildOf(item.name, normalizedDirectoryName)) children.push(path.basename(item.name))
         })
 
         return children
@@ -149,7 +164,7 @@ class DiscordFS {
      */
     getFiles(directoryName) {
         const directory = this.getDirectory(directoryName)
-        if (directory === null) return []
+        if (!directory) return []
 
         return this.files.filter((f) => f.directoryId === directory.id)
     }
@@ -179,7 +194,11 @@ class DiscordFS {
         if (fileExist) this.throwError('File already exist', 'FILE_EXIST')
         this.uploadLock.add(filePath)
         // Create new file and upload
-        const file = new File({ directoryId: directory.id, name: fileName, createdAt: Date.now() })
+        const file = new File({
+            directoryId: directory.id,
+            name: fileName,
+            createdAt: Date.now(),
+        })
         let partNumber = 0
 
         // Function to execute on every chunk from stream
@@ -225,10 +244,16 @@ class DiscordFS {
         // Create file entry
         const fileName = path.basename(filePath)
         const entry = new FileEntry({
-            fileId, directoryId, name: fileName, partNumber,
+            fileId,
+            directoryId,
+            name: fileName,
+            partNumber,
         })
         // Upload file part
-        const fileAttachment = { fileName: uuidv4(), rawBuffer: fileBuffer }
+        const fileAttachment = {
+            fileName: uuidv4(),
+            rawBuffer: fileBuffer,
+        }
         const message = await this.discordAPI.createMessage(entry.string, [fileAttachment])
         // Extract file part data
         const [attachment] = message.attachments
@@ -248,7 +273,9 @@ class DiscordFS {
         debug('>> [RM] in progress :', file.name)
         await Promise.all(
             file.messageIds
-                .map(async (messageId) => this.discordAPI.deleteMessage(messageId).catch(() => {})), // PP hihi
+                .map(async (messageId) => this.discordAPI.deleteMessage(messageId)
+                    .catch(() => {
+                    })), // PP hihi
         )
         this.files = this.files.filter((f) => f.id !== file.id)
         debug('>> [RM] complete    :', file.name)
@@ -261,33 +288,79 @@ class DiscordFS {
      */
     async rmdir(directoryName) {
         // TODO : Fix lock
-        if (this.deleteLock.has(directoryName)) this.throwError(`${directoryName} delete in progress`, 'DELETE_IN_PROGRESS')
-        else this.deleteLock.add(directoryName)
+        if (this.deleteLock.has(directoryName)) {
+            this.throwError(`${directoryName} delete in progress`, 'DELETE_IN_PROGRESS')
+        } else {
+            this.deleteLock.add(directoryName)
+        }
         debug('>> [RMDIR] in progress :', directoryName)
         const directory = this.directories.find((d) => d.name === directoryName)
-        if (directory) await this.discordAPI.deleteMessage(directory.mid)
-        else return
+        if (directory) {
+            await this.discordAPI.deleteMessage(directory.mid)
+        } else {
+            return
+        }
         this.directories = this.directories.filter((d) => d.id !== directory.id)
         const files = this.files.filter((f) => f.directoryId === directory.id)
         await Promise.all(files.map((file) => this.rm(file)))
-        const childDirectories = this.getChildDirectories(directoryName).map((d) => path.normalize(`${directoryName}/${d}`))
+        const childDirectories = this.getChildDirectories(directoryName)
+            .map((d) => path.normalize(`${directoryName}/${d}`))
         await Promise.all(childDirectories.map(async (d) => this.rmdir(d)))
         this.deleteLock.delete(directoryName)
     }
 
     /**
      * List files and directories for given directory
-     * @param directoryName
+     * @param {String} directoryName
      * @return {Object[]}
      */
     list(directoryName) {
         debug('>> [LS] in progress :', directoryName)
-        const files = this.getFiles(directoryName).map((f) => ({
-            name: f.name,
-            size: f.size,
-            directory: false,
-        }))
-        const directories = this.getChildDirectories(directoryName).map((d) => ({ name: d, directory: true }))
+        const files = this.getFiles(directoryName)
+            .map((f) => ({
+                name: f.name,
+                size: f.size,
+                directory: false,
+            }))
+        const directories = this.getChildDirectories(directoryName)
+            .map((d) => ({
+                name: d,
+                directory: true,
+            }))
+
+        return [...files, ...directories]
+    }
+
+    /**
+     * Find files and directories for given name
+     * @param {String} query
+     * @return {Object[]}
+     */
+    find(query) {
+        debug('>> [FIND] in progress :', query)
+        const files = this.files.filter((f) => f.name.toLowerCase()
+            .replace(/\s/g, '')
+            .includes(query.toLowerCase()
+                .replace(/\s/g, '')))
+            .map((f) => {
+                const directory = this.directories.find((d) => d.id === f.directoryId)
+
+                return {
+                    name: f.name,
+                    path: directory.name,
+                    size: f.size,
+                    directory: false,
+                }
+            })
+
+        const directories = this.directories.filter((d) => d.name.toLowerCase()
+            .replace(/\s/g, '')
+            .includes(query.toLowerCase()
+                .replace(/\s/g, '')))
+            .map((d) => ({
+                name: d.name,
+                directory: true,
+            }))
 
         return [...files, ...directories]
     }
@@ -301,6 +374,7 @@ class DiscordFS {
         debug('>> [MKDIR] in progress :', name)
         // Create or return existing directory
         const directoryName = Util.normalizePath(name)
+        // Create sub dir 'mkdir -p' -> mkdir d1/d2/d3
         if (name !== '/') {
             const baseDirectory = this.directories.find((d) => d.name === path.dirname(directoryName))
             if (!baseDirectory) await this.mkdir(path.dirname(directoryName))
@@ -310,12 +384,26 @@ class DiscordFS {
         if (existingDirectory) return existingDirectory
 
         // Create new Directory
-        const entry = new DirectoryEntry({ name: directoryName, createdAt: Date.now() })
+        const entry = new DirectoryEntry({
+            name: directoryName,
+            createdAt: Date.now(),
+        })
         const message = await this.discordAPI.createMessage(entry.string)
         entry.mid = message.id
         this.directories.push(entry)
 
         return entry
+    }
+
+    /**
+     *
+     */
+    isChildOf(child, parent) {
+        if (child === parent) return false
+        const parentTokens = parent.split('/')
+            .filter((i) => i.length)
+
+        return parentTokens.every((t, i) => child.split('/')[i] === t)
     }
 
     /**
@@ -328,14 +416,6 @@ class DiscordFS {
         error.code = code
 
         throw error
-    }
-
-    /**
-     * Get total fs size
-     * @return {Number}
-     */
-    get size() {
-        return this.files.reduce((t, f) => t + f.size, 0)
     }
 }
 
