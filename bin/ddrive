@@ -2,7 +2,7 @@
 
 const debug = require('debug')
 const yargs = require('yargs/yargs')(process.argv.slice(2))
-const DiscordFS = require('../src/fs/')
+const DiscordFS = require('../src/discordFS/')
 const HTTPServer = require('../src/httpServer')
 
 debug.enable('*') // Enable logging

@@ -1,5 +1,4 @@
 const { v4: uuidv4 } = require('uuid')
-
 const EntryType = require('./entryType')
 const BaseEntry = require('./baseEntry')
 

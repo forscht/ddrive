@@ -396,17 +396,6 @@ class DiscordFS {
     }
 
     /**
-     *
-     */
-    isChildOf(child, parent) {
-        if (child === parent) return false
-        const parentTokens = parent.split('/')
-            .filter((i) => i.length)
-
-        return parentTokens.every((t, i) => child.split('/')[i] === t)
-    }
-
-    /**
      * Custom discordFS error
      * @param {String} message
      * @param {String} code
