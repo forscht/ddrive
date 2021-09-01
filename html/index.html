@@ -15,21 +15,16 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Londrina+Shadow&family=Saira+Stencil+One&family=Tourney:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <div class="main">
     <div class="title">
-        <!-- <h1 id="title-label"> DDrive </h1>
-        <p id="title-description">Lightweight cloud storage system using discord</p> -->
-
-        <div class="main-logo-wrapper">
-            <div class="border">
-                <h1 class="mainlogo">DDRIVE</h1>
-            </div>
-            <h5 class="subheading">LIGHT WEIGHT CLOUD STORAGE SYSTEM USING DISCORD</h5>
+        <div class="border">
+            <h1 class="mainlogo">DDRIVE</h1>
         </div>
+        <h5 class="subheading">LIGHT WEIGHT CLOUD STORAGE SYSTEM USING DISCORD</h5>
     </div>
     <div class="file-browser-title">
         <div class="file-browser-title-text">File Browser</div>
@@ -58,8 +53,8 @@
 <div class="upload-file-modal" id="upload-file-modal">
 
     <div class="progress-div">
-        <label id="progress_bar_label" for="progress_bar" style="display: none">Upload progress</label>
-        <progress id="progress_bar" value="0" max="100" style="display: none"></progress>
+        <label id="progress-bar-label" for="progress-bar" style="display: none">Upload progress</label>
+        <progress id="progress-bar" value="0" max="100" style="display: none"></progress>
         <span id="message"></span>
         <label for="folder-input" hidden></label>
         <input type="text" id="folder-input" placeholder="Folder name" style="display: none">
@@ -70,8 +65,10 @@
 </div>
 
 <script>
-    const progress_bar = document.getElementById('progress_bar')
-    const progress_bar_label = document.getElementById('progress_bar_label')
+
+    // Get buttons
+    const progress_bar = document.getElementById('progress-bar')
+    const progress_bar_label = document.getElementById('progress-bar-label')
     const message = document.getElementById('message')
     const upload_button = document.getElementById('upload-button')
     const file_input = document.getElementById('file-upload')
@@ -82,10 +79,12 @@
     const modal_create_folder_cancel = document.getElementById('modal-create-folder-cancel')
     const search_button = document.getElementById('search-button')
 
+    // Find button
     search_button.addEventListener('click', function () {
-        window.location.href = `${window.location.origin}/find/${document.getElementById('file-search').value}`
-        console.log(`${window.location.origin}/find/${document.getElementById('file-search').value}`)
+        window.location.replace(`${window.location.origin}/find/${document.getElementById('file-search').value}`)
     })
+
+    // Hide Modal
     modal_create_folder_cancel.addEventListener('click', function () {
         upload_file_modal.style.display = 'none'
         document.getElementById('folder-input').style.display = 'none'
@@ -95,7 +94,8 @@
         }
     })
 
-    modal_create_folder_create.addEventListener('click', function (){
+    // Hide Modal
+    modal_create_folder_create.addEventListener('click', function () {
         createFolder(document.getElementById('folder-input').value)
         document.getElementById('folder-input').style.display = 'none'
         const buttons = document.getElementsByClassName('modal-create-folder')
@@ -104,6 +104,7 @@
         }
     })
 
+    // Show Modal
     create_folder_button.addEventListener('click', function () {
         upload_file_modal.style.display = 'block'
         document.getElementById('folder-input').style.display = 'block'
@@ -113,22 +114,25 @@
         }
     })
 
+    // Delete folder + file
     file_browser.addEventListener('click', (event) => {
 
-        const isFileDeleteButton = event.target.nodeName === 'BUTTON' && event.target.className === 'delete-file'
-        if (isFileDeleteButton) {
-            deleteFile(event.target.id)
+        const isDeleteButton = event.target.nodeName === 'BUTTON' && event.target.className === 'delete-file'
+        if (isDeleteButton) {
+            deleteResource(event.target.id)
         }
 
-        console.dir(event.target.id)
+    })
+
+    // On upload button click pop-up file-input
+    upload_button.addEventListener('click', function () {
+        file_input.click()
     })
     file_input.addEventListener('change', function () {
         send()
     })
-    upload_button.addEventListener('click', function () {
-        file_input.click()
-    })
 
+    // Convert bytes to human readable size
     function humanFileSize(bytes, si = false, dp = 1) {
         const thresh = si ? 1000 : 1024
 
@@ -150,11 +154,31 @@
         return bytes.toFixed(dp) + ' ' + units[u]
     }
 
-    function setDeleteErrorMessage(msg) {
+    // Helper function to set message
+    function setMessage(msg) {
+        message.innerText = msg
+    }
+
+    // Helper function to set error message
+    function setErrorMessage(msg) {
         message.innerText = msg
         message.style.color = '#f8283b'
     }
 
+    // Set progress bar
+    function setProgress(loaded, total) {
+        const progress = (total === 0) ? 0 : loaded / total * 100
+        progress_bar.value = progress
+        setMessage(humanFileSize(loaded) + '(' + progress.toFixed(2) + '%)')
+    }
+
+    // Hide progress bas
+    function hideProgress() {
+        progress_bar.style.display = 'none'
+        progress_bar_label.style.display = 'none'
+    }
+
+    // PUT /folder-name
     function createFolder(filePath) {
         upload_file_modal.style.display = 'block'
         const xhr = new XMLHttpRequest()
@@ -163,7 +187,7 @@
         xhr.open('PUT', path, true)
         xhr.onload = function () {
             if (xhr.status !== 200) {
-                setDeleteErrorMessage(`[Error] ${xhr.responseText}`)
+                setErrorMessage(`[Error] ${xhr.responseText}`)
             } else {
                 window.location.reload()
             }
@@ -176,14 +200,16 @@
         message.innerText = 'Please wait while folder is being created'
     }
 
-    function deleteFile(filePath) {
+    // DELETE - /folder
+    // Delete file or folder
+    function deleteResource(filePath) {
         upload_file_modal.style.display = 'block'
         const xhr = new XMLHttpRequest()
         const path = window.location.origin + filePath
         xhr.open('DELETE', path, true)
         xhr.onload = function () {
             if (xhr.status !== 200) {
-                setDeleteErrorMessage(`[Error] ${xhr.responseText}`)
+                setErrorMessage(`[Error] ${xhr.responseText}`)
             } else {
                 window.location.reload()
             }
@@ -196,47 +222,24 @@
         message.innerText = 'Please wait while file is being deleted'
     }
 
-    function setMessage(msg) {
-        message.innerText = msg
-    }
-
-    function setErrorMessage(msg) {
-        message.innerText = msg
-        message.style.color = '#f8283b'
-    }
-
-    function setProgress(loaded, total) {
-        const progress = (total === 0) ? 0 : loaded / total * 100
-        progress_bar.value = progress
-        setMessage(humanFileSize(loaded) + '(' + progress.toFixed(2) + '%)')
-    }
-
-    function hideProgress() {
-        progress_bar.style.display = 'none'
-        progress_bar_label.style.display = 'none'
-    }
-
+    // Upload file
+    // POST - /File
     function send() {
-        // Select body (text or file)
-        const body = file_input.files[0]
         upload_file_modal.style.display = 'block'
-        // Send
+        const body = file_input.files[0]
         const xhr = new XMLHttpRequest()
         const path = location.href.replace(/\/$/, '') + '/' + body.name
         xhr.open('POST', path, true)
 
-        // Update progress bar
         xhr.upload.onprogress = function (e) {
             setProgress(e.loaded, e.total)
         }
         xhr.upload.onload = function (e) {
-            // Send finished
             if (xhr.status === 200) {
                 setProgress(e.loaded, e.total)
             }
         }
         xhr.onload = function () {
-            // Status code error
             if (xhr.status !== 200) {
                 setErrorMessage(`[Error] ${xhr.responseText}`)
                 hideProgress()
@@ -249,7 +252,6 @@
             window.location.reload()
         }
         xhr.send(body)
-        // Show progress bar
         progress_bar.style.removeProperty('display')
         progress_bar_label.style.removeProperty('display')
     }

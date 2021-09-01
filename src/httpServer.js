@@ -6,12 +6,16 @@ const Util = require('./utils/util')
 
 /**
  * HTTP Server - API for discordFS
+ * === API ENDPOINT ===
  * GET - /Directory - Return HTML
  * GET - /Directory/file.mp4 - Return file from discordFS
  * PUT - /Directory1 - Create directory in discordFS
  * POST - /Directory1/file1.mp4 - Create file in discordFS
  * DELETE - /Directory1/file1.mp4 - Delete file
  * DELETE - /Directory1 - Delete directory
+ * === RESERVED PATH ===
+ * - /favicon.ico
+ * - /style.css
  */
 class HttpServer {
     constructor(discordFS, opts = {}) {
@@ -41,6 +45,8 @@ class HttpServer {
         this.webPage = fs.readFileSync(`${__dirname}/../html/index.html`)
             .toString()
         this.favicon = fs.readFileSync(`${__dirname}/../html/favicon.ico`)
+        this.styleCSS = fs.readFileSync(`${__dirname}/../html/style.css`)
+            .toString()
     }
 
     /**
@@ -70,6 +76,9 @@ class HttpServer {
             if (req.url === '/favicon.ico') {
                 res.writeHead(200)
                 res.end(this.favicon)
+            } else if (req.url === '/style.css') {
+                res.writeHead(200)
+                res.end(this.styleCSS)
             } else if (req.method === 'OPTIONS') {
                 res.writeHead(200, {
                     'Access-Control-Allow-Origin': '*',
