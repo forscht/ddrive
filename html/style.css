@@ -241,7 +241,7 @@ a.name-of-file, a.name-of-folder {
 }
 
 a.name-of-file:hover, a.name-of-folder:hover {
-    color: #58a6ff;
+    color: #eecd20;
 }
 
 div.del-svg-image {
@@ -374,17 +374,17 @@ div.progress-div {
 
 /* For Firefox */
 progress::-moz-progress-bar {
-    background: #f8283b;
+    background: #eecd20;
 }
 
 /* For Chrome or Safari */
 progress::-webkit-progress-value {
-    background: #f8283b;
+    background: #eecd20;
 }
 
 /* For IE10 */
 progress {
-    background: #f8283b;
+    background: #eecd20;
 }
 
 #folder-input {

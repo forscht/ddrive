@@ -240,7 +240,8 @@ class HttpServer {
         })
         const pathArray = reqPath.split('/')
         pathNavigationHTML[directoryArray.length - 1] = `<li id="current-path">${pathArray[pathArray.length - 1] || 'HOME'}</li>`
-        this.loadStaticFiles()
+
+        // this.loadStaticFiles() // For testing purpose read load static file on every request
 
         return this.webPage
             .replace('{{DIRECTORY_ENTRIES}}', directoryHTML)
