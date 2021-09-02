@@ -1,5 +1,7 @@
+/* eslint-disable no-param-reassign */
 const https = require('https')
 const path = require('path')
+const fs = require('fs')
 const debugError = require('debug')('error')
 
 class Util {
@@ -149,6 +151,26 @@ class Util {
 
             return 0
         })
+    }
+
+    /**
+     * Return array of all files in current dir
+     * @param {String} dirPath
+     * @param {String[]} arrayOfFiles
+     * @return {String[]}
+     */
+    static getAllFiles(dirPath, arrayOfFiles = []) {
+        const files = fs.readdirSync(dirPath)
+
+        files.forEach((file) => {
+            if (fs.statSync(`${dirPath}/${file}`).isDirectory()) {
+                arrayOfFiles = Util.getAllFiles(`${dirPath}/${file}`, arrayOfFiles)
+            } else {
+                arrayOfFiles.push(path.join(process.cwd(), dirPath, '/', file))
+            }
+        })
+
+        return arrayOfFiles
     }
 }
 

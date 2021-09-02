@@ -173,9 +173,10 @@ class DiscordFS {
      * Upload file from readable stream
      * @param {String} filePath
      * @param stream
+     * @param {Boolean} skipDuplicate
      * @return {Promise<unknown>}
      */
-    async createFile(filePath, stream) {
+    async createFile(filePath, stream, skipDuplicate = false) {
         if (this.uploadLock.has(filePath)) this.throwError(`${filePath} upload is already in progress`, 'UPLOAD_IN_PRGORESS')
         debug('>> [ADD] in progress :', filePath)
 
@@ -191,6 +192,7 @@ class DiscordFS {
 
         // Check if file already exist
         const fileExist = this.files.find((f) => f.directoryId === directory.id && f.name === fileName)
+        if (fileExist && skipDuplicate) return debug('>> [ADD] skip ', filePath) // For Dclone skip exiting file
         if (fileExist) this.throwError('File already exist', 'FILE_EXIST')
         this.uploadLock.add(filePath)
         // Create new file and upload
@@ -223,7 +225,7 @@ class DiscordFS {
                 .pipe(new AsyncStreamProcessor(chunkProcessor))
                 .on('finish', () => {
                     this.files.push(file)
-                    debug('>> [ADD] completed   :', fileName)
+                    debug('>> [ADD] completed   :', filePath)
                     this.uploadLock.delete(filePath)
                     resolve(file)
                 })
