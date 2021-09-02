@@ -1,7 +1,5 @@
 name: "CodeQL"
 on: [push, pull_request]
-  schedule:
-    - cron: '44 11 * * 4'
 
 jobs:
   analyze:
@@ -21,6 +19,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
