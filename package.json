@@ -1,6 +1,6 @@
 {
   "name": "@forscht/ddrive",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "A lightweight cloud storage system using discord as storage device written in nodejs",
   "main": "bin/ddrive",
   "author": "Darshan Patel <heyforscht@gmail.com> (https://github.com/forscht/ddrive)",
@@ -18,7 +18,8 @@
     "lint": "eslint --ext mjs,js,ts"
   },
   "bin": {
-    "ddrive": "bin/ddrive"
+    "ddrive": "bin/ddrive",
+    "dclone": "bin/dclone"
   },
   "engines": {
     "node": "16.x"
