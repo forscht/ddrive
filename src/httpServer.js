@@ -19,8 +19,8 @@ const Util = require('./utils/util')
  */
 class HttpServer {
     constructor(discordFS, opts = {}) {
-        if (!opts.httpPort) debug('WARNING :: HTTP port not defined using default port :', 8080)
-        this.httpPort = opts.httpPort || 8080
+        if (!opts.httpPort) debug('WARNING :: HTTP port not defined using default port or Heroku Port:', 8080)
+        this.httpPort = opts.httpPort || process.env.PORT || 8080 // To support Heroku
         if (!opts.auth) debug('WARNING :: Auth not defined starting server without auth')
         this.auth = opts.auth
         this.discordFS = discordFS
