@@ -169,7 +169,7 @@
     function setProgress(loaded, total) {
         const progress = (total === 0) ? 0 : loaded / total * 100
         progress_bar.value = progress
-        setMessage(humanFileSize(loaded) + '(' + progress.toFixed(2) + '%)')
+        setMessage(humanFileSize(loaded, true) + '(' + progress.toFixed(2) + '%)')
     }
 
     // Hide progress bas

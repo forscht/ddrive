@@ -27,7 +27,6 @@ div.title {
     display: flex;
     flex-direction: column;
     border-radius: 0.5rem;
-    padding-left: 0.5rem;
     align-items: center;
     justify-content: center;
     margin-bottom: -20px;
@@ -36,7 +35,7 @@ div.title {
 div.border  {
     background-color : transparent;
     border: 0.6rem solid #eecd20;
-    width: 21rem;
+    /*width: 21rem;*/
     height: 5.6rem;
     display: flex;
     align-items: center;
@@ -194,7 +193,7 @@ button.delete-file {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    min-width: 0;
+    min-width: max-content;
 }
 
 button:hover {
@@ -236,7 +235,6 @@ a.name-of-file, a.name-of-folder {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    min-width: 60%;
     font-size: 14px;
 }
 
@@ -252,9 +250,7 @@ div.del-svg-image {
 p.file-size {
     color: #c9d1d9;
     padding-right: 0.7rem;
-    padding-left: 0.6rem;
     font-size: 14px;
-    overflow: hidden;
     white-space: nowrap;
 }
 
@@ -355,11 +351,9 @@ div.progress-div {
     color: #c9d1d9;
     background-color: #0d1117;
     margin: 10% auto;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    padding-left: 1rem;
+    padding: 1rem 1rem 1rem 1rem;
     border: 1px solid #888;
-    width: 30rem;
+    width: available;
     border-radius: 0.4rem;
     align-content: center;
 }
@@ -400,6 +394,9 @@ progress {
 @media screen and (min-width: 45rem) {
     div.main {
         margin: auto;
+    }
+    div.progress-div{
+        width: max-content;
     }
 }
 
