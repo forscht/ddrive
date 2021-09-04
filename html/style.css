@@ -137,10 +137,7 @@ button.modal-create-folder {
     padding-right: 0.5rem;
     margin-right: 0.5rem;
     font-size: 13px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    min-width: 0;
+    min-width: max-content;
 }
 
 #modal-create-folder-create {
@@ -364,6 +361,7 @@ div.progress-div {
 
 #message {
     padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 /* For Firefox */
