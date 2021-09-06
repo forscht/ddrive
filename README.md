@@ -1,6 +1,6 @@
 <h1 align="center" style="font-size: 60px"> DDRIVE </h1>
 
-<p align="center"><strong> A lightweight cloud storage system using discord as storage device written in nodejs.</strong></p>
+<p align="center"><strong> Turns Discord into a datastore that can manage and store your files. </strong></p>
 <p align="center">
     <a href="https://github.com/forscht/ddrive/actions/workflows/lint.yml">
         <img src="https://github.com/forscht/ddrive/actions/workflows/lint.yml/badge.svg">
@@ -21,7 +21,7 @@
 </p>
 <br>
 
-##### **DDrive** Supports unlimited file size and unlimited storage, I've implemented it using node js streams with multi-part up & download.
+##### **DDrive** A lightweight cloud storage system using discord as storage device written in nodejs. Supports unlimited file size and unlimited storage, I've implemented it using node js streams with multi-part up & download.
 
 #### Current development branch `3.x`
 
