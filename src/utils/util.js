@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-const https = require('https')
 const path = require('path')
 const fs = require('fs')
 const debugError = require('debug')('error')
@@ -48,22 +47,6 @@ class Util {
         } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1)
 
         return `${bytes.toFixed(dp)} ${units[u]}`
-    }
-
-    /**
-     * Download file using native https library
-     * @param {String} url
-     * @return {Promise<Buffer>}
-     */
-    static downloadFile(url) {
-        return new Promise((resolve, reject) => {
-            const chunks = []
-            https.get(url, (res) => {
-                res.on('data', (data) => chunks.push(data))
-                res.on('error', (err) => reject(err))
-                res.on('end', () => resolve(Buffer.concat(chunks)))
-            })
-        })
     }
 
     /**

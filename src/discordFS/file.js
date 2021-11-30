@@ -1,7 +1,8 @@
 /* eslint-disable no-await-in-loop,no-restricted-syntax */
 const { v4: uuidv4 } = require('uuid')
 const debug = require('debug')('discordFS')
-const Util = require('../utils/util')
+const https = require('https')
+const AsyncStreamProcessor = require('../utils/asyncStreamProcessor')
 
 class File {
     constructor(opts) {
@@ -13,11 +14,13 @@ class File {
     }
 
     get size() {
-        return this.parts.map((p) => p.size).reduce((t, s) => t + s, 0)
+        return this.parts.map((p) => p.size)
+            .reduce((t, s) => t + s, 0)
     }
 
     get urls() {
-        return this.parts.sort((a, b) => a.partNumber - b.partNumber).map((p) => p.url)
+        return this.parts.sort((a, b) => a.partNumber - b.partNumber)
+            .map((p) => p.url)
     }
 
     get messageIds() {
@@ -27,8 +30,15 @@ class File {
     async download(stream) {
         debug('>> [DOWNLOAD] in progress :', this.name)
         for (const file of this.urls) {
-            const data = await Util.downloadFile(file)
-            if (!stream.write(data)) await new Promise((resolve) => stream.once('drain', resolve))
+            await new Promise((resolve, reject) => {
+                https.get(file, (res) => {
+                    res.pipe(new AsyncStreamProcessor(async (data) => {
+                        if (!stream.write(data)) await new Promise((r) => stream.once('drain', r))
+                    }))
+                    res.on('error', (err) => reject(err))
+                    res.on('end', () => resolve())
+                })
+            })
         }
         debug('>> [DOWNLOAD] completed   :', this.name)
         stream.end()

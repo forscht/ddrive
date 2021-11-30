@@ -70,6 +70,7 @@ class HttpServer {
 
             return
         }
+
         const decodedURL = decodeURI(req.url)
 
         try {
@@ -119,7 +120,8 @@ class HttpServer {
                 if (file) {
                     res.writeHead(200, {
                         'Content-Length': file.size,
-                        'Content-Disposition': `attachment; filename="${file.name}"`,
+                        // eslint-disable-next-line no-control-regex
+                        'Content-Disposition': `attachment; filename="${file.name.replace(/[^\x00-\x7F]/g, '')}"`,
                     })
                     await file.download(res)
                 } else if (directory) {

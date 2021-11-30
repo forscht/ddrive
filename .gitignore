@@ -9,3 +9,4 @@ log.csv
 !**/.keep
 dist
 config.json
+exec
