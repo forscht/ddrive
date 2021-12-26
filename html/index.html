@@ -73,16 +73,26 @@
     const upload_button = document.getElementById('upload-button')
     const file_input = document.getElementById('file-upload')
     const file_browser = document.getElementById('file-browser')
+    const file_search_input = document.getElementById('file-search')
     const upload_file_modal = document.getElementById('upload-file-modal')
     const create_folder_button = document.getElementById('create-folder')
     const modal_create_folder_create = document.getElementById('modal-create-folder-create')
     const modal_create_folder_cancel = document.getElementById('modal-create-folder-cancel')
     const search_button = document.getElementById('search-button')
 
-    // Find button
-    search_button.addEventListener('click', function () {
+    // search file/ folder utility
+    function search(){  
         window.location.replace(`${window.location.origin}/find/${document.getElementById('file-search').value}`)
-    })
+    }
+
+    function enterKeyEvent(e){
+        if( e.keyCode === 13 ){
+            search()
+        }
+    }
+
+    search_button.addEventListener('click', search) // listening to ui search button 
+    file_search_input.addEventListener('keyup', enterKeyEvent) // listening to enter key event
 
     // Hide Modal
     modal_create_folder_cancel.addEventListener('click', function () {
