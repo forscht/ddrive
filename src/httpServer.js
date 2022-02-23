@@ -5,6 +5,10 @@ const path = require('path')
 const Util = require('./utils/util')
 
 /**
+ * @typedef {import('./discordFS')} discordFS
+ */
+
+/**
  * HTTP Server - API for discordFS
  * === API ENDPOINT ===
  * GET - /Directory - Return HTML
@@ -18,6 +22,13 @@ const Util = require('./utils/util')
  * - /style.css
  */
 class HttpServer {
+    /**
+     * @description Create HTTP frontend for discordFS
+     * @param {discordFS} discordFS
+     * @param {Object} opts
+     * @param {Number} [opts.httpPort=8080] - Port where HTTP server will start listening
+     * @param {String} [opts.auth] - Basic auth support for HTTP server. Format : username:password
+     */
     constructor(discordFS, opts = {}) {
         if (!opts.httpPort) debug('WARNING :: HTTP port not defined using default port or Heroku Port:', 8080)
         this.httpPort = opts.httpPort || process.env.PORT || 8080 // To support Heroku

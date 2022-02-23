@@ -14,7 +14,10 @@ const Util = require('../utils/util')
 class DiscordFS {
     /**
      * Create new discord FS
-     * @param opts
+     * @param {Object} opts
+     * @param {String} opts.token - Discord bot/user auth token
+     * @param {String} opts.channelId - Id of text channel where you want to store your data
+     * @param {Number} [opts.chunkSize=7864320] - Number of bytes to be chunked for large file. Must be less than 8MB for discord bot user.
      */
     constructor(opts) {
         this.channelId = opts.channelId
@@ -23,7 +26,7 @@ class DiscordFS {
             channelId: opts.channelId,
         })
 
-        this.chunkSize = 7864320
+        this.chunkSize = opts.chunkSize || 7864320
         this.files = []
         this.directories = []
         this.uploadLock = new Set()
