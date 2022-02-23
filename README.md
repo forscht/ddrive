@@ -1,4 +1,4 @@
-™<h1 align="center" style="font-size: 60px"> DDRIVE </h1>
+<h1 align="center" style="font-size: 60px"> DDRIVE </h1>
 
 <p align="center"><strong> Turns Discord into a datastore that can manage and store your files. </strong></p>
 <p align="center">
