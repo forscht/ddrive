@@ -220,7 +220,7 @@ class DiscordFS {
             cb(err)
         }
 
-        // Finally consume stream
+        // Finally, consume stream
         return new Promise((resolve, reject) => {
             stream
                 .on('aborted', () => handleAbort(reject)) // On HTTP request abort delete all the messages and reject promise
@@ -279,8 +279,7 @@ class DiscordFS {
         await Promise.all(
             file.messageIds
                 .map(async (messageId) => this.discordAPI.deleteMessage(messageId)
-                    .catch(() => {
-                    })), // PP hihi
+                    .catch(() => {})), // PP HiHi
         )
         this.files = this.files.filter((f) => f.id !== file.id)
         debug('>> [RM] complete    :', file.name)

@@ -5,10 +5,6 @@ const path = require('path')
 const Util = require('./utils/util')
 
 /**
- * @typedef {import('./discordFS')} discordFS
- */
-
-/**
  * HTTP Server - API for discordFS
  * === API ENDPOINT ===
  * GET - /Directory - Return HTML
@@ -24,7 +20,7 @@ const Util = require('./utils/util')
 class HttpServer {
     /**
      * @description Create HTTP frontend for discordFS
-     * @param {discordFS} discordFS
+     * @param discordFS
      * @param {Object} opts
      * @param {Number} [opts.httpPort=8080] - Port where HTTP server will start listening
      * @param {String} [opts.auth] - Basic auth support for HTTP server. Format : username:password
@@ -129,12 +125,23 @@ class HttpServer {
                 const file = this.discordFS.getFile(decodedURL)
                 const directory = this.discordFS.getDirectory(decodedURL)
                 if (file) {
-                    res.writeHead(200, {
-                        'Content-Length': file.size,
-                        // eslint-disable-next-line no-control-regex
-                        'Content-Disposition': `attachment; filename="${file.name.replace(/[^\x00-\x7F]/g, '')}"`,
-                    })
-                    await file.download(res)
+                    const { range } = req.headers
+                    const parsedRange = Util.rangeParser(file.size, range, { chunkSize: 40 ** 6 })
+                    if (range && parsedRange !== -1) {
+                        const { start, end } = parsedRange
+                        res.writeHead(206, {
+                            'Content-Length': end - start + 1,
+                            'Content-Range': `bytes ${start}-${end}/${file.size}`,
+                            'Accept-Ranges': 'bytes',
+                        })
+                        await file.download(res, start, end)
+                    } else {
+                        res.writeHead(200, {
+                            'Content-Length': file.size,
+                            'Accept-Ranges': 'bytes',
+                        })
+                        await file.download(res)
+                    }
                 } else if (directory) {
                     const entries = this.discordFS.list(decodedURL)
                     const webpage = this.renderWeb(entries, decodedURL)
