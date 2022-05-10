@@ -23,6 +23,8 @@
 
 ##### **DDrive** A lightweight cloud storage system using discord as storage device written in nodejs. Supports unlimited file size and unlimited storage, I've implemented it using node js streams with multi-part up & download.
 
+https://user-images.githubusercontent.com/59018146/167635903-48cdace0-c383-4e7d-a037-4a32eaa4ab69.mp4
+
 #### Current development branch `3.x`
 
 ### Features
