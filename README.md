@@ -30,12 +30,9 @@ https://user-images.githubusercontent.com/59018146/167635903-48cdace0-c383-4e7d-
 ### Features
 - Theoretically unlimited file size thanks to splitting the file in 8mb chunks using nodejs streams API.
 - Simple yet robust HTTP front end
-- Tested with storing 2.5 TB of data on single discord channel (With max file size of 16GB).
+- Tested with storing 4000 GB of data on single discord channel (With max file size of 16GB).
 - Supports basic auth for site.
 - Easily deploy on heroku/repl.it and use as private cloud storage.(Use `ddrive v1` on repl, repl doesn't support node version 16 yet)
-
-### Live project implementation
-Website with 2500GB+ of movies with slightly code modification at [herbalgaanja.com](https://herbalgaanja.com)
 
 ## Setup Guide
 
