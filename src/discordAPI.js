@@ -8,7 +8,7 @@ class DiscordAPI {
      */
     constructor(opts) {
         this.channelId = opts.channelId
-        this.rest = new REST({ version: 9 }).setToken(opts.token)
+        this.rest = new REST({ version: 10, timeout: 30000, ...opts.restOpts }).setToken(opts.token)
     }
 
     /**
@@ -25,13 +25,13 @@ class DiscordAPI {
     /**
      * Send message on channel
      * @param {Object|String} content
-     * @param {Object[]} attachments
+     * @param {Object[]} files
      * @return {Promise<*>}
      */
-    async createMessage(content, attachments = []) {
+    async createMessage(content, files = []) {
         const endpoint = `/channels/${this.channelId}/messages`
         const requestData = {
-            attachments,
+            files,
             body: {
                 content: typeof content === 'string' ? content : JSON.stringify(content),
             },
