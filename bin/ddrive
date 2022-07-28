@@ -7,6 +7,17 @@ const HTTPServer = require('../src/httpServer')
 
 debug.enable('*') // Enable logging
 
+//
+// Disable Experimental features warning
+//
+const { emitWarning } = process;
+
+process.emitWarning = (warning, ...args) => {
+    const warningsToIgnore = ['buffer.Blob is an experimental feature. This feature could change at any time']
+    if (warningsToIgnore.includes(warning)) return
+    return emitWarning(warning, ...args);
+};
+
 // Parse option
 // Env vars will be parsed as option
 // ie DDRIVE_HTTP_PORT will be parsed as httpPort

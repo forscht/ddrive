@@ -16,7 +16,7 @@ class DiscordFS {
      * Create new discord FS
      * @param {Object} opts
      * @param {String} opts.token - Discord bot/user auth token
-     * @param {String} opts.channelId - Id of text channel where you want to store your data
+     * @param {String} opts.channelId - id of text channel where you want to store your data
      * @param {Number} [opts.chunkSize=7864320] - Number of bytes to be chunked for large file. Must be less than 8MB for discord bot user.
      */
     constructor(opts) {
@@ -24,6 +24,7 @@ class DiscordFS {
         this.discordAPI = new DiscordAPI({
             token: opts.token,
             channelId: opts.channelId,
+            restOpts: opts.rest,
         })
 
         this.chunkSize = opts.chunkSize || 7864320
@@ -180,7 +181,7 @@ class DiscordFS {
      * @return {Promise<unknown>}
      */
     async createFile(filePath, stream, skipDuplicate = false) {
-        if (this.uploadLock.has(filePath)) this.throwError(`${filePath} upload is already in progress`, 'UPLOAD_IN_PRGORESS')
+        if (this.uploadLock.has(filePath)) this.throwError(`${filePath} upload is already in progress`, 'UPLOAD_IN_PROGRESS')
         debug('>> [ADD] in progress :', filePath)
 
         // Throw error if directory exist on same file path
@@ -205,10 +206,11 @@ class DiscordFS {
             createdAt: Date.now(),
         })
         let partNumber = 0
-
+        let aborted = false // Workaround to delete remaining file part after file upload aborted
         // Function to execute on every chunk from stream
         const chunkProcessor = async (chunk) => {
             const entry = await this.createFileChunk(filePath, partNumber, chunk, file.id, directory.id)
+            if (aborted) await this.discordAPI.deleteMessage(entry.mid)
             file.parts.push(entry)
             partNumber += 1
         }
@@ -216,6 +218,7 @@ class DiscordFS {
         // Delete all messages if file is failed to upload
         const handleAbort = async (cb, err) => {
             await Promise.all(file.parts.map(async (p) => this.discordAPI.deleteMessage(p.mid)))
+            aborted = true
             this.uploadLock.delete(filePath)
             cb(err)
         }
@@ -223,7 +226,7 @@ class DiscordFS {
         // Finally, consume stream
         return new Promise((resolve, reject) => {
             stream
-                .on('aborted', () => handleAbort(reject)) // On HTTP request abort delete all the messages and reject promise
+                .on('aborted', () => handleAbort(reject, new Error('file upload aborted'))) // On HTTP request abort delete all the messages and reject promise
                 .pipe(new StreamChunker(this.chunkSize))
                 .pipe(new AsyncStreamProcessor(chunkProcessor))
                 .on('finish', () => {
@@ -256,8 +259,8 @@ class DiscordFS {
         })
         // Upload file part
         const fileAttachment = {
-            fileName: uuidv4(),
-            rawBuffer: fileBuffer,
+            name: uuidv4(),
+            data: fileBuffer,
         }
         const message = await this.discordAPI.createMessage(entry.string, [fileAttachment])
         // Extract file part data

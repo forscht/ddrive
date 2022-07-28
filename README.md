@@ -109,12 +109,23 @@ const channelId = '' // Text channelId
 const httpPort = 8080 // Ddrive site port
 const auth = '' // Basic auth for ddrive site. Format - username:password
 
+// If you have slow internet connection and facing user aborted request error
+// increase request timeout limit.
+// Other available options // https://github.com/discordjs/discord.js/blob/c25e8ad78b1a020a24ec50e30dd7315234ce9309/packages/rest/src/lib/REST.ts#L21
+const restOpts = {
+    timeout: '60000',
+}
+const chunkSize = 7864320 // Default 7.8 MB
+
 const run = async () => {
-    const discordFS = new DiscordFS({ token, channelId })
+    const discordFS = new DiscordFS({
+        token, channelId, rest: restOpts, chunkSize,
+    })
     await discordFS.load() // Read files from text channel and build metadata. Might take time depending on storage size
     const httpServer = new HttpServer(discordFS, { httpPort, auth })
     await httpServer.build() // Finally, start http server here
 }
 
 run().then()
+
 ```
