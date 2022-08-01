@@ -33,6 +33,7 @@ https://user-images.githubusercontent.com/59018146/167635903-48cdace0-c383-4e7d-
 - Tested with storing 4000 GB of data on single discord channel (With max file size of 16GB).
 - Supports basic auth for site.
 - Easily deploy on heroku/repl.it and use as private cloud storage.(Use `ddrive v1` on repl, repl doesn't support node version 16 yet)
+- Supports user token. (Check example below)
 
 ## Setup Guide
 
@@ -114,6 +115,7 @@ const auth = '' // Basic auth for ddrive site. Format - username:password
 // Other available options // https://github.com/discordjs/discord.js/blob/c25e8ad78b1a020a24ec50e30dd7315234ce9309/packages/rest/src/lib/REST.ts#L21
 const restOpts = {
     timeout: '60000',
+    // authPrefix: '', Uncomment this if you're using user token
 }
 const chunkSize = 7864320 // Default 7.8 MB
 
