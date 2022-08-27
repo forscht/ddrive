@@ -32,7 +32,7 @@ https://user-images.githubusercontent.com/59018146/167635903-48cdace0-c383-4e7d-
 - Simple yet robust HTTP front end
 - Tested with storing 4000 GB of data on single discord channel (With max file size of 16GB).
 - Supports basic auth for site.
-- Easily deploy on heroku/repl.it and use as private cloud storage.(Use `ddrive v1` on repl, repl doesn't support node version 16 yet)
+- Easily deploy on heroku/replit and use as private cloud storage.
 - Supports user token. (Check example below)
 
 ## Setup Guide
