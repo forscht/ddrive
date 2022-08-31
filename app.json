@@ -15,7 +15,7 @@
   "success_url": "/",
   "env": {
     "DDRIVE_TOKEN": {
-      "description": "A secret discord token to access discord server/channels",
+      "description": "A secret discord token to access discord server/channels.",
       "required": true
     },
     "DDRIVE_CHANNEL_ID": {
