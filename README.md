@@ -56,6 +56,8 @@ ddrive --token <bot token> --channelId <guild channel id>
 # Open http://localhost:8080 in browser
 # use <ddrive help> for more info
 ```
+#### One Click Deploy with Heroku:
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/forscht/ddrive/tree/heroku)
 
 #### With Docker
 ```shell
