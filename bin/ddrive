@@ -50,7 +50,7 @@ const args = yargs
 
 // Extract arguments
 const {
-    token, auth, channelId, httpPort,
+    token, auth, channelId, httpPort = parseInt(process.env.PORT, 10),
 } = args
 
 //

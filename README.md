@@ -57,6 +57,9 @@ ddrive --token <bot token> --channelId <guild channel id>
 # use <ddrive help> for more info
 ```
 
+#### One Click Deploy with Heroku:
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/forscht/ddrive/tree/3.x)
+
 #### With Docker
 ```shell
 docker run --rm -p 8080:8080 -it forscht/ddrive --port 8080 --token <bot-token> --channelId <guild-channel-id>
