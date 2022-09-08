@@ -165,7 +165,6 @@ class Util {
      * @return {Object|Number}
      */
     static rangeParser(size, str, opts) {
-
         if (typeof str !== 'string') return -1
 
         const index = str.indexOf('=')
