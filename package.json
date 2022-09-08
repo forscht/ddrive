@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "node bin/ddrive",
-    "lint": "eslint --ext mjs,js,ts"
+    "lint": "eslint --ext mjs,js,ts ."
   },
   "bin": {
     "ddrive": "bin/ddrive",
