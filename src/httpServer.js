@@ -247,7 +247,7 @@ class HttpServer {
             </div>
             <a href="${path.join(find ? entry.path : reqPath, entry.name)}" class="name-of-file">${entry.name} </a>
             <button class="delete-file" id="${path.join(find ? entry.path : reqPath, entry.name)}">Delete</button>
-            <p class="file-size">${Util.humanFileSize(entry.size, true)}</p>
+            <p class="file-size">${Util.humanReadableSize(entry.size, true)}</p>
         </div>`)
             .join('\n')
 
@@ -267,7 +267,7 @@ class HttpServer {
             .replace('{{DIRECTORY_ENTRIES}}', directoryHTML)
             .replace('{{FILE_ENTRIES}}', filesHTML)
             .replace('{{PATH_PLACE_HOLDER}}', pathNavigationHTML.join('\n'))
-            .replace('{{TOTAL_FS_SIZE}}', Util.humanFileSize(this.discordFS.size, true))
+            .replace('{{TOTAL_FS_SIZE}}', Util.humanReadableSize(this.discordFS.size, true))
     }
 }
 
