@@ -119,7 +119,7 @@ class HttpServer {
             } else if (req.method === 'GET' && decodedURL.startsWith('/find/')) {
                 const entries = this.discordFS.find(path.basename(decodedURL))
                 const webpage = this.renderWeb(entries, `/${path.basename(decodedURL)}`, true)
-                res.writeHead(200)
+                res.writeHead(200, { 'Content-Type': "text/html" })
                 res.end(webpage)
             } else if (req.method === 'GET') {
                 const file = this.discordFS.getFile(decodedURL)
@@ -145,11 +145,11 @@ class HttpServer {
                 } else if (directory) {
                     const entries = this.discordFS.list(decodedURL)
                     const webpage = this.renderWeb(entries, decodedURL)
-                    res.writeHead(200)
+                    res.writeHead(200, { 'Content-Type': "text/html" })
                     res.end(webpage)
                 } else if (req.url === '/') {
                     const webpage = this.renderWeb([], decodedURL)
-                    res.writeHead(200)
+                    res.writeHead(200, { 'Content-Type': "text/html" })
                     res.end(webpage)
                 } else {
                     res.writeHead(404)
