@@ -1,6 +1,6 @@
 <h1 align="center" style="font-size: 60px"> DDRIVE </h1>
 
-<p align="center"><strong> Turns Discord into a datastore that can manage and store your files. </strong></p>
+<p align="center"><strong> Turn Discord into a datastore that can manage and store your files. </strong></p>
 <p align="center">
     <a href="https://github.com/forscht/ddrive/actions/workflows/lint.yml">
         <img src="https://github.com/forscht/ddrive/actions/workflows/lint.yml/badge.svg">
@@ -21,7 +21,7 @@
 </p>
 <br>
 
-##### **DDrive** A lightweight cloud storage system using discord as storage device written in nodejs. Supports unlimited file size and unlimited storage, I've implemented it using node js streams with multi-part up & download.
+##### **DDrive** A lightweight cloud storage system using discord as storage device written in nodejs. Supports an unlimited file size and unlimited storage, I've implemented it using node js streams with multi-part up & download.
 
 https://user-images.githubusercontent.com/59018146/167635903-48cdace0-c383-4e7d-a037-4a32eaa4ab69.mp4
 
@@ -33,11 +33,11 @@ https://user-images.githubusercontent.com/59018146/167635903-48cdace0-c383-4e7d-
 - Tested with storing 4000 GB of data on single discord channel (With max file size of 16GB).
 - Supports basic auth for site.
 - Easily deploy on heroku/replit and use as private cloud storage.
-- Supports user token. (Check example below)
+- Supports user tokens. (Check example below)
 
 ## Setup Guide
 
-### Requirement
+### Requirements
 - NodeJS v16.x or Docker
 - Discord bot token, Text Channel ID
 
@@ -45,7 +45,7 @@ https://user-images.githubusercontent.com/59018146/167635903-48cdace0-c383-4e7d-
 1. **Creating the bot** - In order for this program to work, you're going to need to create a discord bot, so we can connect to the discord API. Go to [this](https://discordapp.com/developers/applications/me) link to create a bot. Make sure to create a user bot, ensure the bot is private and **message content intent** is enabled. [Here's](https://i.imgur.com/5AQZGq9.png) a picture to the configuration. **Keep note of the token and the client ID.**
 2. **Setting up server** - The bot will need a place to upload files. Create a new discord server, make sure no one else is on it unless you want them to access your files.
 3. **Adding your bot to the server** - To add the bot to the server (assuming your bot isn't public), go to the following link: https://discordapp.com/oauth2/authorize?client_id={CLIENT_ID}&scope=bot&permissions=0 Replace {CLIENT_ID} with the client ID you copied earlier. Then, select the server you just made and authorize. Your server should now show your bot like [this](http://i.imgur.com/NnqQAv7.png).
-4. **Copy channelId** - Right click on text channel and click on `Copy Id`. If you don't see this option, goto settings -> Advanced -> Enable developer mode.
+4. **Copy channelId** - Right click on text channel and click on `Copy Id`. If you don't see this option, go to Settings -> Advanced -> Enable developer mode.
 5. By now you should have `bot token` and `text channel id`.
 
 ### Setting up the program
@@ -59,6 +59,9 @@ ddrive --token <bot token> --channelId <guild channel id>
 
 #### One Click Deploy with Heroku:
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/forscht/ddrive/tree/3.x)
+
+#### One Click Deploy with Replit:
+[![Deploy](https://replit.com/badge/github/forscht/ddrive)](https://replit.com/github/forscht/ddrive)
 
 #### With Docker
 ```shell
@@ -103,7 +106,7 @@ Options:
       --config     Path to JSON config file
 ```
 
-### API usage
+### API Usage
 ```javascript
 process.env.DEBUG = '*'
 const { DiscordFS, HttpServer } = require('@forscht/ddrive')
