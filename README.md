@@ -63,6 +63,9 @@ ddrive --token <bot token> --channelId <guild channel id>
 #### One Click Deploy with Replit:
 [![Deploy](https://replit.com/badge/github/forscht/ddrive)](https://replit.com/github/forscht/ddrive)
 
+#### One Click Deploy with Railway:
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/ALJmfS?referralCode=27ekYT)
+
 #### With Docker
 ```shell
 docker run --rm -p 8080:8080 -it forscht/ddrive --port 8080 --token <bot-token> --channelId <guild-channel-id>
