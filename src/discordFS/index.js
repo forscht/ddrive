@@ -75,6 +75,8 @@ class DiscordFS {
             )
         }
 
+        if(channelMessages.length === 0) return // Text channel is empty
+
         const messagesGroupByType = _.groupBy(tempMessageCache, (message) => message.content.type)
         // Channel is empty
         if (!messagesGroupByType.directory) return
