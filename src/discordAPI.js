@@ -30,14 +30,34 @@ class DiscordAPI {
      */
     async createMessage(content, files = []) {
         const endpoint = `/channels/${this.channelId}/messages`
-        const requestData = {
-            files,
-            body: {
-                content: typeof content === 'string' ? content : JSON.stringify(content),
-            },
-        }
+        content = typeof content === 'string' ? JSON.parse(content) : content
+        if (content.type === 'file') {
+            const requestData = {
+                files,
+                body: {
+                    embeds: [{
+                        title: 'Upload File',
+                        description: `Filename: \`${content.name}\`\nPart number: \`${content.partNumber}\`\nDirectory ID: \`${content.directoryId}\`\nFile ID: \`${content.fileId}\``,
+                        color: 4080
+                    }],
+                }
+            }
 
-        return this.rest.post(endpoint, requestData)
+            return this.rest.post(endpoint, requestData)
+        }
+        else if (content.type === 'directory') {
+            const requestData = {
+                files,
+                body: {
+                    embeds: [{
+                        title: 'Create Directory',
+                        description: `Directory Name: \`${content.name}\`\nCreate At: \`${content.createdAt}\`\nDirectory ID: \`${content.id}\`\n`,
+                        color: 4080
+                    }],
+                }
+            }
+            return this.rest.post(endpoint, requestData)
+        }
     }
 
     /**
