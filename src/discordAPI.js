@@ -38,7 +38,7 @@ class DiscordAPI {
                     embeds: [{
                         title: 'Upload File',
                         description: `Filename: \`${content.name}\`\nPart number: \`${content.partNumber}\`\nDirectory ID: \`${content.directoryId}\`\nFile ID: \`${content.fileId}\``,
-                        color: 4080
+                        color: 32768
                     }],
                 }
             }
@@ -52,7 +52,7 @@ class DiscordAPI {
                     embeds: [{
                         title: 'Create Directory',
                         description: `Directory Name: \`${content.name}\`\nCreate At: \`${content.createdAt}\`\nDirectory ID: \`${content.id}\`\n`,
-                        color: 4080
+                        color: 32768
                     }],
                 }
             }
