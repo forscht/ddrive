@@ -17,8 +17,9 @@ class DiscordAPI {
         const restOpts = { ...REST_OPTS, ...opts.restOpts }
         // By default, @discordjs/rest package adds `Bot` in every outgoing
         // request's auth header but for user token it's not needed so remove the prefix
-        if (opts.token.startsWith('USER')) restOpts.authPrefix = ''
-        this.rest = new REST(restOpts).setToken(opts.token)
+        const { type: tokenType, token } = this.extractUserToken(opts.token)
+        if (tokenType === 'USER') restOpts.authPrefix = ''
+        this.rest = new REST(restOpts).setToken(token)
     }
 
     /**
@@ -59,6 +60,24 @@ class DiscordAPI {
         const endpoint = `/channels/${this.channelId}/messages/${messageId}`
 
         return this.rest.delete(endpoint)
+    }
+
+    /**
+     * Check type of token
+     * @param {String} token
+     * @returns {{type: string, token}}
+     */
+    extractUserToken(token) {
+        const extracted = {
+            token,
+            type: 'BOT',
+        }
+        if (token.toLowerCase().startsWith('user ')) {
+            extracted.type = 'USER'
+            extracted.token = token.substring(5)
+        }
+
+        return extracted
     }
 }
 

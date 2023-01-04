@@ -121,6 +121,7 @@ const { DiscordFS, HttpServer } = require('@forscht/ddrive')
 const token = '' // Discord bot token
 const channelId = '' // Text channelId
 const httpPort = 8080 // Ddrive site port
+const auth = '' // Basic auth for ddrive site. Format - username:password
 
 // If you have slow internet connection and facing user aborted request error
 // increase request timeout limit.
@@ -142,3 +143,11 @@ const run = async () => {
 run().then()
 
 ```
+
+### FAQ
+1. Can I use user token to store the files?
+   - Yes you can
+2. How can I use user token to store the files?
+   1. Extract user token (Search in YouTube how to extract user token)
+   2. Append 'USER' before the token. Example `User {TOKEN}`
+3. 
