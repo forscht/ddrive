@@ -1,6 +1,11 @@
 const { REST } = require('@discordjs/rest')
 const querystring = require('querystring')
 
+const REST_OPTS = {
+    version: 10,
+    timeout: 60000, // Request will be aborted after this
+}
+
 class DiscordAPI {
     /**
      * Create discord API wrapper
@@ -8,7 +13,13 @@ class DiscordAPI {
      */
     constructor(opts) {
         this.channelId = opts.channelId
-        this.rest = new REST({ version: 10, timeout: 30000, ...opts.restOpts }).setToken(opts.token)
+        // Prepare rest opts
+        const restOpts = { ...REST_OPTS, ...opts.restOpts }
+        // By default, @discordjs/rest package adds `Bot` in every outgoing
+        // request's auth header but for user token it's not needed so remove the prefix
+        const { type: tokenType, token } = this.extractUserToken(opts.token)
+        if (tokenType === 'USER') restOpts.authPrefix = ''
+        this.rest = new REST(restOpts).setToken(token)
     }
 
     /**
@@ -49,6 +60,24 @@ class DiscordAPI {
         const endpoint = `/channels/${this.channelId}/messages/${messageId}`
 
         return this.rest.delete(endpoint)
+    }
+
+    /**
+     * Check type of token
+     * @param {String} token
+     * @returns {{type: string, token}}
+     */
+    extractUserToken(token) {
+        const extracted = {
+            token,
+            type: 'BOT',
+        }
+        if (token.toLowerCase().startsWith('user ')) {
+            extracted.type = 'USER'
+            extracted.token = token.substring(5)
+        }
+
+        return extracted
     }
 }
 
