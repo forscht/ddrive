@@ -90,7 +90,7 @@ pm2 start ddrive
 #### Fix Windows Powershell issue
 ```shell
 #ERROR 
-# ddrive : File C:\Users\<User>\AppData\Roaming\npm\ddrive.ps1 cannot be loaded because running scripts is disabled on this system. For more information
+# ddrive : File C:\Users\<User>\AppData\Roaming\npm\ddrive.ps1 cannot be loaded because running scripts is disabled on this system.
 1. Open powershell as Administrator
 2. run `set-executionpolicy remotesigned`
 ```
@@ -106,6 +106,10 @@ Options:
                                                                         [string]
   -T, --token      Discord bot/user token                    [string] [required]
   -C, --channelId  Text channel id where data will be stored [string] [required]
+      --timeout    Time in ms before upload request to discord server will be
+                   aborted. Increase it if you have slow internet       [number]
+      --chunkSize  Size of chunk (part) to be uploaded to discord in bytes. Max
+                   8MB for bot token and 500MB for nitro user token     [number]
       --config     Path to JSON config file
 ```
 
@@ -117,14 +121,12 @@ const { DiscordFS, HttpServer } = require('@forscht/ddrive')
 const token = '' // Discord bot token
 const channelId = '' // Text channelId
 const httpPort = 8080 // Ddrive site port
-const auth = '' // Basic auth for ddrive site. Format - username:password
 
 // If you have slow internet connection and facing user aborted request error
 // increase request timeout limit.
 // Other available options // https://github.com/discordjs/discord.js/blob/c25e8ad78b1a020a24ec50e30dd7315234ce9309/packages/rest/src/lib/REST.ts#L21
 const restOpts = {
     timeout: '60000',
-    // authPrefix: '', Uncomment this if you're using user token
 }
 const chunkSize = 7864320 // Default 7.8 MB
 

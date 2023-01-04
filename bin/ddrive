@@ -45,20 +45,29 @@ const args = yargs
         required: true,
         type: 'string',
     })
+    .option('timeout', {
+        describe: 'Time in ms before upload request to discord server will be aborted. Increase it if you have slow internet',
+        required: false,
+        type: 'number',
+    })
+    .option('chunkSize', {
+        describe: 'Size of chunk (part) to be uploaded to discord in bytes. Max 8MB for bot token and 500MB for nitro user token',
+        required: false,
+        type: 'number'
+    })
     .config()
     .argv
 
 // Extract arguments
 const {
-    token, auth, channelId, httpPort = parseInt(process.env.PORT, 10),
+    token, auth, channelId, httpPort = parseInt(process.env.PORT, 10), chunkSize, timeout
 } = args
-
 //
 // App entry point
 //
 const startApp = async () => {
     // Boot discordFS
-    const discordFS = new DiscordFS({ token, channelId })
+    const discordFS = new DiscordFS({ token, channelId, chunkSize, rest: { timeout } })
     await discordFS.load() // Build file index
 
     // Create HTTP Server
