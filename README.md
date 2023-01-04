@@ -146,8 +146,7 @@ run().then()
 
 ### FAQ
 1. Can I use user token to store the files?
-   - Yes you can
+   1. Yes you can
 2. How can I use user token to store the files?
    1. Extract user token (Search in YouTube how to extract user token)
    2. Append 'USER' before the token. Example `User {TOKEN}`
-3. 
