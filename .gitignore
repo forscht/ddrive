@@ -5,8 +5,8 @@ node_modules/
 .history/
 .DS_Store
 test/coverage/
-log.csv
 !**/.keep
 dist
 config.json
 exec
+.env

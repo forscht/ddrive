@@ -1,0 +1,291 @@
+openapi: "3.0.0"
+info:
+  version: "1.0.0"
+  title: "DDrive API"
+  description: Discord based file manager
+
+paths:
+  /directories:
+    get:
+      summary: Get root directory
+      responses:
+        200:
+          description: The directory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Directory"
+        404:
+          $ref: "#/components/responses/NotFound"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        500:
+          $ref: "#/components/responses/Unexpected"
+
+  /directories/{directoryId}:
+    parameters:
+      - name: directoryId
+        description: The unique identifier of the directory
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/DirectoryId"
+    get:
+      summary: Get a directory
+      responses:
+        200:
+          description: The directory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Directory"
+        404:
+          $ref: "#/components/responses/NotFound"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        500:
+          $ref: "#/components/responses/Unexpected"
+
+    post:
+      summary: Create a directory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Directory"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Directory"
+        400:
+          $ref: "#/components/responses/BadRequest"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        500:
+          $ref: "#/components/responses/Unexpected"
+
+    put:
+      summary: Update a directory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Directory"
+      responses:
+        200:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Directory"
+        400:
+          $ref: "#/components/responses/BadRequest"
+        404:
+          $ref: "#/components/responses/NotFound"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        500:
+          $ref: "#/components/responses/Unexpected"
+
+    delete:
+      summary: Delete a directory
+      responses:
+        204:
+          description: Deleted
+        404:
+          $ref: "#/components/responses/NotFound"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        500:
+          $ref: "#/components/responses/Unexpected"
+
+  /files/{fileId}:
+    parameters:
+      - name: fileId
+        description: The unique identifier of the file
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/FileId"
+    get:
+      summary: Get a file
+      responses:
+        200:
+          description: The file
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
+        404:
+          $ref: "#/components/responses/NotFound"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        500:
+          $ref: "#/components/responses/Unexpected"
+    post:
+      summary: Create a file
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/File"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
+        400:
+          $ref: "#/components/responses/BadRequest"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        500:
+          $ref: "#/components/responses/Unexpected"
+
+    put:
+      summary: Update a file
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/File"
+      responses:
+        200:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
+        400:
+          $ref: "#/components/responses/BadRequest"
+        404:
+          $ref: "#/components/responses/NotFound"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        500:
+          $ref: "#/components/responses/Unexpected"
+    delete:
+      summary: Delete a file
+      responses:
+        204:
+          description: Deleted
+        404:
+          $ref: "#/components/responses/NotFound"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        500:
+          $ref: "#/components/responses/Unexpected"
+
+  /files/{fileId}/downlaod:
+    parameters:
+      - name: fileId
+        description: The unique identifier of the file
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/FileId"
+    get:
+      summary: Get a file
+      responses:
+        200:
+          description: The file
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        404:
+          $ref: "#/components/responses/NotFound"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        500:
+          $ref: "#/components/responses/Unexpected"
+
+components:
+  responses:
+    BadRequest:
+      description: Invalid request body
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unexpected:
+      description: Unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    FileId:
+      description: The unique identifier of file
+      type: string
+    File:
+      type: object
+      required:
+        - id
+        - name
+        - parentId
+      properties:
+        id:
+          $ref: "#/components/schemas/FileId"
+        name:
+          type: string
+        parentId:
+          $ref: "#/components/schemas/DirectoryId"
+        createdAt:
+          type: string
+    DirectoryId:
+      description: The unique identifier of directory
+      type: string
+    Directory:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          $ref: "#/components/schemas/DirectoryId"
+        name:
+          type: string
+        parentId:
+          $ref: "#/components/schemas/DirectoryId"
+        child:
+          type: object
+          properties:
+            directories:
+              type: array
+              items:
+                $ref: "#/components/schemas/DirectoryId"
+            files:
+              type: array
+              items:
+                $ref: "#/components/schemas/File"
+        createdAt:
+          type: string
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+security:
+  - ApiKey: []

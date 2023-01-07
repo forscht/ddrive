@@ -1,4 +1,4 @@
-const DiscordFS = require('./discordFS')
-const HttpServer = require('./httpServer')
+const DFs = require('./DFs')
+const API = require('./API')
 
-module.exports = { DiscordFS, HttpServer }
+module.exports = { DFs, API }

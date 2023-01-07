@@ -1,6 +1,6 @@
 const { Transform } = require('stream')
 
-class StreamChunker extends Transform {
+class AsyncStreamProcessor extends Transform {
     constructor(chunkProcessor) {
         super()
         this.chunkProcessor = chunkProcessor
@@ -13,4 +13,4 @@ class StreamChunker extends Transform {
     }
 }
 
-module.exports = StreamChunker
+module.exports = AsyncStreamProcessor
