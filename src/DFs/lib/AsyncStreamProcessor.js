@@ -10,12 +10,16 @@ class AsyncStreamProcessor extends Transform {
     }
 
     _transform(chunk, encoding, callback) {
+        let callBackCalled = false
         if (this.currConcurrency < this.maxConcurrency) {
             callback(null)
             this.currConcurrency += 1
+            callBackCalled = true
         }
         this.chunkProcessor(chunk, this.chunkCount)
-            .then(() => callback(null))
+            .then(() => {
+                if (!callBackCalled) callback(null)
+            })
             .catch((err) => callback(err))
         this.chunkCount += 1
     }
