@@ -1,0 +1,62 @@
+:root {
+    --global-font-size: 1rem;
+    --global-line-height: 1.4em;
+    --global-space: 5px;
+    --page-width: 50rem;
+    --font-stack: Menlo, Monaco, Lucida Console, Liberation Mono,
+    DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace,
+    serif;
+    --mono-font-stack: Menlo, Monaco, Lucida Console, Liberation Mono,
+    DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace,
+    serif;
+    --input-style: solid;
+    --display-h1-decoration: none;
+    --background-color: #222225;
+    --font-color: #ffffff;
+    --invert-font-color: #222225;
+    --secondary-color: #a3abba;
+    --tertiary-color: #a3abba;
+    --primary-color: #62c4ff;
+    --error-color: #ff3c74;
+    --progress-bar-background: #3f3f44;
+    --progress-bar-fill: #62c4ff;
+    --code-bg-color: #3f3f44;
+}
+
+th {
+    text-align: left;
+}
+
+table td {
+    padding-left: 1rem;
+}
+
+table th {
+    padding-left: 1rem;
+}
+
+table tbody td:first-child {
+    font-weight: normal;
+    color: unset;
+}
+
+.selected {
+    background-color: var(--primary-color);
+    color: var(--invert-font-color);
+}
+
+button {
+    cursor: pointer;
+    color: var(--font-color);
+}
+
+button:disabled {
+    cursor: unset;
+    color: var(--tertiary-color);
+}
+
+body {
+    white-space: nowrap;
+    text-overflow: '----';
+    overflow: hidden
+}

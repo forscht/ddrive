@@ -22,7 +22,7 @@ const startApp = async () => {
     })
     const api = API(dfs)
 
-    return api.listen({ address: '0.0.0.0', port: PORT })
+    return api.listen({ host: '0.0.0.0', port: PORT })
 }
 
 startApp().then()

@@ -21,8 +21,7 @@
     "migration:down": "knex migrate:down",
     "migration:make": "knex migrate:make"
   },
-  "bin": {
-  },
+  "bin": {},
   "engines": {
     "node": "16.x"
   },
@@ -30,11 +29,15 @@
     "@forscht/eslint-config": "latest"
   },
   "eslintConfig": {
+    "env": {
+      "browser": true
+    },
     "extends": "@forscht"
   },
   "dependencies": {
     "@discordjs/rest": "^1.0.0",
     "@fastify/multipart": "^7.3.0",
+    "@fastify/static": "^6.6.0",
     "dotenv": "^16.0.3",
     "fastify": "^4.11.0",
     "knex": "^2.3.0",

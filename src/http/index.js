@@ -1,5 +1,6 @@
-require('dotenv').config()
+const path = require('path')
 const Fastify = require('fastify')
+const FastifyStatic = require('@fastify/static')
 const FastifyMultipart = require('@fastify/multipart')
 
 const commonSchemas = require('./constants/commonSchemas')
@@ -15,8 +16,9 @@ module.exports = (dfs) => {
 
     // Register routes
     fastify.register(FastifyMultipart)
-    fastify.register(directoryRoutes)
-    fastify.register(fileRoutes)
+    fastify.register(FastifyStatic, { root: path.join(__dirname, 'static') })
+    fastify.register(directoryRoutes, { prefix: '/api' })
+    fastify.register(fileRoutes, { prefix: '/api' })
 
     // Attach dfs to every req
     fastify.addHook('onRequest', async (req) => { req.dfs = dfs })
