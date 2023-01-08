@@ -9,12 +9,12 @@ const StreamChunker = require('./lib/StreamChunker')
 const DEFAULT_CHUNK_SIZE = 7864320 // 7.5MB
 const DEFAULT_ENCRYPTION = 'aes-256-ctr'
 const DEFAULT_REST_OPTS = { version: 10, timeout: 60000 }
-const DEFAULT_CHUNK_PROCESS_CONCURRENCY = 3
+const DEFAULT_MAX_UPLOAD_CONCURRENCY = 3
 
 class DiscordFileSystem {
     constructor(opts) {
         this.webhooks = opts.webhooks
-        this.chunkProcessConcurrency = opts.chunkProcessConcurrency || DEFAULT_CHUNK_PROCESS_CONCURRENCY
+        this.maxUploadConc = opts.maxUploadConc || DEFAULT_MAX_UPLOAD_CONCURRENCY
         this.chunkSize = opts.chunkSize || DEFAULT_CHUNK_SIZE
         this.encAlg = opts.encAlg || DEFAULT_ENCRYPTION
         this.secret = opts.secret
@@ -142,7 +142,7 @@ class DiscordFileSystem {
             stream
                 .on('aborted', () => reject(new Error('file upload aborted'))) // On HTTP request abort delete all the messages and reject promise
                 .pipe(new StreamChunker(this.chunkSize))
-                .pipe(new AsyncStreamProcessor(processChunk, this.chunkProcessConcurrency))
+                .pipe(new AsyncStreamProcessor(processChunk, this.maxUploadConc))
                 .on('finish', () => resolve(parts))
                 .on('error', (err) => reject(err))
         })

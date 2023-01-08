@@ -65,10 +65,6 @@ function copyTextToClipboard(text) {
 //
 // Helper functions
 //
-function clearTable() {
-    while (tbody.hasChildNodes()) tbody.removeChild(tbody.lastChild)
-}
-
 function getSelected() {
     const [selected] = table.getElementsByClassName('selected')
     if (!selected) return undefined
@@ -88,11 +84,17 @@ function resetBtns() {
 }
 
 function disableAllBtns() {
+    prevBtn.disabled = true
     createFolderBtn.disabled = true
     uploadBtn.disabled = true
     trashBtn.disabled = true
     renameBtn.disabled = true
     clipboardBtn.disabled = true
+}
+
+function clearTableAndResetButtons() {
+    while (tbody.hasChildNodes()) tbody.removeChild(tbody.lastChild)
+    resetBtns()
 }
 
 //
@@ -101,11 +103,15 @@ function disableAllBtns() {
 async function refreshTable() {
     const resp = await fetch(`/api/directories/${currDirectory}`)
     const body = await resp.json()
+    if (resp.status !== 200) {
+        disableAllBtns()
+
+        return
+    }
     currDirectory = body.id
     parentDirectory = body.parentId
     prevBtn.disabled = !parentDirectory
-    clearTable()
-    resetBtns()
+    clearTableAndResetButtons()
     for (const directory of body.child.directories) {
         tbody.appendChild(prepareFolderTR(directory))
     }
@@ -253,8 +259,8 @@ async function handleDoubleClick(e) {
 function loadDataTable() {
     document.onclick = handleClick
     document.ondblclick = handleDoubleClick
+    clearTableAndResetButtons()
     refreshTable().then()
-    resetBtns()
     fileInput.addEventListener('change', () => uploadFile())
 }
 

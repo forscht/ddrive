@@ -38,6 +38,8 @@
     "@discordjs/rest": "^1.0.0",
     "@fastify/multipart": "^7.3.0",
     "@fastify/static": "^6.6.0",
+    "@fastify/auth": "^4.2.0",
+    "commander": "^9.5.0",
     "dotenv": "^16.0.3",
     "fastify": "^4.11.0",
     "knex": "^2.4.0",

@@ -1,4 +1,3 @@
-bin/pm2.yaml
 .idea/
 node_modules/
 .vscode/
@@ -7,6 +6,5 @@ node_modules/
 test/coverage/
 !**/.keep
 dist
-config.json
 exec
 .env

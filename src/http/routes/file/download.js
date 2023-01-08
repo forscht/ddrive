@@ -3,6 +3,9 @@ const HTTP_CODE = require('../../constants/httpCode')
 const db = require('../../services/database')
 
 module.exports.opts = {
+    config: {
+        ACCESS_TAGS: ['READ_ONLY_PANEL', 'READ_ONLY_FILE'],
+    },
     schema: {
         params: {
             type: 'object',
