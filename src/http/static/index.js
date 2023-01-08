@@ -10,6 +10,7 @@ const uploadBtn = document.getElementById('upload-btn')
 
 const trashBtn = document.getElementById('trash-btn')
 const renameBtn = document.getElementById('rename-btn')
+const clipboardBtn = document.getElementById('clipboard-btn')
 
 let currDirectory = ''
 let parentDirectory = ''
@@ -36,6 +37,31 @@ function download(url) {
     document.body.removeChild(a)
 }
 
+function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+
+    // Avoid scrolling to bottom
+    textArea.style.top = '0'
+    textArea.style.left = '0'
+    textArea.style.position = 'fixed'
+
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+    document.execCommand('copy')
+    document.body.removeChild(textArea)
+}
+
+function copyTextToClipboard(text) {
+    if (!navigator.clipboard) {
+        fallbackCopyTextToClipboard(text)
+
+        return
+    }
+    navigator.clipboard.writeText(text).then(() => {}, () => {})
+}
+
 //
 // Helper functions
 //
@@ -58,6 +84,7 @@ function resetBtns() {
     const selected = getSelected()
     trashBtn.disabled = !selected
     renameBtn.disabled = !selected
+    clipboardBtn.disabled = !(selected && selected.type === 'file')
 }
 
 function disableAllBtns() {
@@ -65,6 +92,7 @@ function disableAllBtns() {
     uploadBtn.disabled = true
     trashBtn.disabled = true
     renameBtn.disabled = true
+    clipboardBtn.disabled = true
 }
 
 //
@@ -151,6 +179,14 @@ async function createFolder() {
     disableAllBtns()
 }
 
+function copyToClipboard() {
+    const selected = getSelected()
+    if (selected && selected.type === 'file') {
+        // eslint-disable-next-line no-restricted-globals
+        const url = `${location.href.replace(/\/$/, '')}/api/files/${selected.id}/download`
+        copyTextToClipboard(url)
+    }
+}
 async function renameFileOrFolder() {
     const selected = getSelected()
     const inputText = document.createElement('input')
@@ -189,6 +225,9 @@ async function handleClick(e) {
     }
     if (e.target.id === createFolderBtn.id) {
         await createFolder()
+    }
+    if (e.target.id === clipboardBtn.id) {
+        copyToClipboard()
     }
     if (selected) {
         selected.classList.remove('selected')
