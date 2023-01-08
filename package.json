@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "node bin/ddrive",
-    "lint": "eslint --ext mjs,js,ts .",
+    "lint": "eslint --ext mjs,js,ts . --ignore-path src/http/static",
     "migration:latest": "knex migrate:latest",
     "migration:up": "knex migrate:up",
     "migration:down": "knex migrate:down",
@@ -40,7 +40,7 @@
     "@fastify/static": "^6.6.0",
     "dotenv": "^16.0.3",
     "fastify": "^4.11.0",
-    "knex": "^2.3.0",
+    "knex": "^2.4.0",
     "lodash": "^4.17.21",
     "pg": "^8.8.0",
     "uuid": "^8.3.2"

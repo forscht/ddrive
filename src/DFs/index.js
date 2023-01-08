@@ -3,16 +3,18 @@ const https = require('https')
 const crypto = require('crypto')
 const { REST } = require('@discordjs/rest')
 const uuid = require('uuid').v4
-const AsyncStreamProcessor = require('./utils/AsyncStreamProcessor')
-const StreamChunker = require('./utils/StreamChunker')
+const AsyncStreamProcessor = require('./lib/AsyncStreamProcessor')
+const StreamChunker = require('./lib/StreamChunker')
 
 const DEFAULT_CHUNK_SIZE = 7864320 // 7.5MB
 const DEFAULT_ENCRYPTION = 'aes-256-ctr'
 const DEFAULT_REST_OPTS = { version: 10, timeout: 60000 }
+const DEFAULT_CHUNK_PROCESS_CONCURRENCY = 3
 
 class DiscordFileSystem {
     constructor(opts) {
         this.webhooks = opts.webhooks
+        this.chunkProcessConcurrency = opts.chunkProcessConcurrency || DEFAULT_CHUNK_PROCESS_CONCURRENCY
         this.chunkSize = opts.chunkSize || DEFAULT_CHUNK_SIZE
         this.encAlg = opts.encAlg || DEFAULT_ENCRYPTION
         this.secret = opts.secret
@@ -124,7 +126,7 @@ class DiscordFileSystem {
     async write(stream) {
         const parts = []
         // This function will be executed to process each chunk for file
-        const processChunk = async (data) => {
+        const processChunk = async (data, chunkCount) => {
             // Encrypt the data if secret is provided
             let iv
             let encrypted
@@ -133,7 +135,7 @@ class DiscordFileSystem {
             const part = { name: uuid(), data: encrypted || data }
             const { attachments: [attachment] } = await this._uploadFile(part)
             // Push part object into array and return later
-            parts.push({ url: attachment.url, size: attachment.size, iv })
+            parts[chunkCount] = { url: attachment.url, size: attachment.size, iv }
         }
 
         return new Promise((resolve, reject) => {

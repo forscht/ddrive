@@ -63,6 +63,8 @@ exports.up = async (knex) => {
             .defaultTo(knex.fn.now())
             .comment('We want to know when this entry was created')
     })
+
+    await knex(DIRECTORY_TABLE).insert({ name: 'root', type: 'directory' })
 }
 
 /**
