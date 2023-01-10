@@ -1,7 +1,7 @@
 require('dotenv').config()
 const path = require('path')
 const _ = require('lodash')
-const knex = require('../src/http/utils/knex')
+const knex = require('../src/HTTP/utils/knex')
 
 const normalizePath = (p, addLastSlash = false) => {
     let r = path.posix.normalize(p.replace(/\\/g, '/'))
@@ -84,7 +84,7 @@ const migrate = async () => {
     }
 
     await createDir()
-    console.log('Migration Done')
+    console.log('------------- Migration Done -------------------')
     process.exit(0)
 }
 

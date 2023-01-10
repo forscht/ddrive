@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "node bin/ddrive",
-    "lint": "eslint --ext mjs,js,ts . --ignore-pattern 'src/http/static'",
+    "lint": "eslint --ext mjs,js,ts . --ignore-pattern 'src/HTTP/static'",
     "migration:latest": "knex migrate:latest",
     "migration:up": "knex migrate:up",
     "migration:down": "knex migrate:down",
