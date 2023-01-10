@@ -47,7 +47,7 @@ const HttpConfig = () => {
 const DFsConfig = () => {
     const {
         CHUNK_SIZE,
-        UPLOAD_CONCRRENCY = '',
+        UPLOAD_CONCURRENCY = '',
         REQUEST_TIMEOUT = '',
         SECRET = '',
         WEBHOOKS = '',
@@ -56,20 +56,20 @@ const DFsConfig = () => {
     // Get webhook URLs
     let webhooks = loadWebhooks()
     if (!webhooks) webhooks = WEBHOOKS.split(',')
-    if (!webhooks) {
+    if (!webhooks || !webhooks.length) {
         throw new Error('Webhook URLs missing. Webhook URLs seperated by "," in .env and seperated by "\n" webhook.txt file supported')
     }
     // If chunkSize is invalid set the default chunkSize
     let chunkSize = parseInt(CHUNK_SIZE, 10)
     if (!_.isFinite(chunkSize)
         || chunkSize < 1
-        || chunkSize > 8e+6) chunkSize = 7864320 // 7.5 MB
+        || chunkSize > 8388608) chunkSize = 7864320 // 7.5 MB
 
     // Set proper request timeout
     let timeout = parseInt(REQUEST_TIMEOUT, 10)
     if (!_.isFinite(timeout) || timeout < 1) timeout = 60000
 
-    let maxConcurrency = parseInt(UPLOAD_CONCRRENCY, 10)
+    let maxConcurrency = parseInt(UPLOAD_CONCURRENCY, 10)
     if (!_.isFinite(maxConcurrency) || maxConcurrency < 1) maxConcurrency = 3
 
     return {

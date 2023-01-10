@@ -23,23 +23,40 @@
 
 ##### **DDrive** A lightweight cloud storage system using discord as storage device written in nodejs. Supports an unlimited file size and unlimited storage, I've implemented it using node js streams with multi-part up & download.
 
-https://user-images.githubusercontent.com/59018146/167635903-48cdace0-c383-4e7d-a037-4a32eaa4ab69.mp4
-
-#### Current development branch `3.x`
+#### Current stable branch `4.x`
 
 ### Features
 - Theoretically unlimited file size thanks to splitting the file in 8mb chunks using nodejs streams API.
 - Simple yet robust HTTP front end
+- Rest API with OpenAPI 3.1 specifications.
 - Tested with storing 4000 GB of data on single discord channel (With max file size of 16GB).
-- Supports basic auth for site.
-- Easily deploy on heroku/replit and use as private cloud storage.
-- Supports user tokens. (Check example below)
+- Supports basic auth with read only public access to panel.
+- Easily deployable on heroku/replit and use as private cloud storage.
+
+## New Version 4.0
+The new version 4 is here - I spent several weeks finalizing this new version.  Any support is highly appreciated - [Buy me a coffee](https://www.buymeacoffee.com/forscht)
+
+This next major version release 4.0 is ddrive written from scratch. It comes with most requested features and several improvements.
+
+- Now uses postgres to store files metadata. Why?
+  - Once you have huge amount of data stored on ddrive it makes ddrive significantly slow to start since ddrive have to fetch all the metadata from discord channel (For 3 TB of data it takes me 30+ minutes.)
+  - With postgres, deleting file is extremely faster because now ddrive don't have to delete files on discord channel and just need to remove from metadata only.
+  - With postgres now it's possible to move or rename files/folders which was impossible with older version.
+- Added support for rename files/folders.
+- Added support to move file/folder (Only via API)
+- Added support to Webhooks to bypass the discord rate limit
+- DDrive now uploads file chunks in parallel with limit. Which significantly increase the upload speed. I was able to upload file with 5GB of size in just 85 seconds.
+- Public access mode - It is not now possible to provide users readonly access with just one config var
+- Batch upload files - Now you can upload multiple files at once from UI. (DClone is not supported in this version)
+- Bug fix - `download reset` for few mobile devices
+- Added support for optional encryption to files uploaded to discord
+- DDrive now has proper rest API with OpenAPI 3.1 standards.
 
 ## Setup Guide
 
 ### Requirements
 - NodeJS v16.x or Docker
-- Discord bot token, Text Channel ID
+- Postgres Database, Discord Webhook URLs
 
 ### Setting up discord bot and server
 1. **Creating the bot** - In order for this program to work, you're going to need to create a discord bot, so we can connect to the discord API. Go to [this](https://discordapp.com/developers/applications/me) link to create a bot. Make sure to create a user bot, ensure the bot is private and **message content intent** is enabled. [Here's](https://i.imgur.com/5AQZGq9.png) a picture to the configuration. **Keep note of the token and the client ID.**

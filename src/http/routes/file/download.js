@@ -1,3 +1,5 @@
+const path = require('path')
+const mime = require('mime-types')
 const { throwHttpError, rangeParser } = require('../../utils/Util')
 const HTTP_CODE = require('../../constants/httpCode')
 const db = require('../../services/database')
@@ -42,16 +44,26 @@ module.exports.handler = async (req, reply) => {
     if (!file.parts.length) throwHttpError('Corrupt file', HTTP_CODE.INTERNAL_SERVER_ERROR)
 
     //
+    // Prepare response headers
+    //
+    const resHeaders = {
+        'Content-Length': file.size,
+        'Accept-Ranges': 'bytes',
+        'Content-Disposition': `attachment; filename=${file.name}`,
+    }
+    const mimeType = mime.lookup(path.extname(file.name))
+    if (mimeType) resHeaders['Content-Type'] = mimeType
+
+    //
     // Handle Partial content request (Resume download)
     //
     const parsedRange = rangeParser(file.size, range)
     if (range && parsedRange !== -1) {
         const { start, end } = parsedRange
         reply.raw.writeHead(HTTP_CODE.PARTIAL_CONTENT, {
+            ...resHeaders,
             'Content-Length': end - start + 1,
             'Content-Range': `bytes ${start}-${end}/${file.size}`,
-            'Accept-Ranges': 'bytes',
-            'Content-Disposition': `attachment; filename=${file.name}`,
         })
         file.parts = rangedParts(file.parts, parsedRange.start, parsedRange.end)
 
@@ -60,11 +72,7 @@ module.exports.handler = async (req, reply) => {
     //
     // Handle request without partial content
     //
-    reply.raw.writeHead(HTTP_CODE.OK, {
-        'Content-Length': file.size,
-        'Accept-Ranges': 'bytes',
-        'Content-Disposition': `attachment; filename=${file.name}`,
-    })
+    reply.raw.writeHead(HTTP_CODE.OK, resHeaders)
 
     return req.dfs.read(reply.raw, file.parts)
 }

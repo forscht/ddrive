@@ -5,7 +5,6 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <meta content="ie=edge" http-equiv="X-UA-Compatible"/>
     <meta content="#ffffff" name="msapplication-TileColor"/>
-    <meta content="/favicon/ms-icon-144x144.png" name="msapplication-TileImage"/>
     <meta content="#ffffff" name="theme-color"/>
     <title>DDrive - </title>
     <link href="favicon.png" rel="shortcut icon" type="image/png">
@@ -13,35 +12,56 @@
     <link href="favicon.png" rel="apple-touch-icon">
     <meta content="website" property="og:type"/>
     <meta content="Piped" property="og:title"/>
-    <meta content="https://piped.cc/" property="og:url"/>
+    <meta content="https://github.com/forscht/ddrive" property="og:url"/>
     <meta content="Encrypted Open Source File Sharing Platform." property="og:description"/>
-    <meta content="https://piped.cc/favicon.png" property="og:image"/>
+    <meta content="/favicon.png" property="og:image"/>
     <meta
-            content="Piped - Encrypted Open Source File Sharing Platform."
+            content="DDrive - Encrypted Open Source File Sharing Platform."
             name="description"
     />
     <link rel="manifest" href="manifest.json">
     <link href="normalize.css" rel="stylesheet"/>
     <link href="https://unpkg.com/terminal.css@0.7.2/dist/terminal.min.css" rel="stylesheet"/>
-    <style>
-        @media only screen and (min-width: 120em) {
-        }
-    </style>
     <link href="style.css" rel="stylesheet"/>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
 </head>
 <body class="terminal">
 <div class="container">
     <div class="terminal-nav">
         <header class="terminal-logo">
-            <div class="logo terminal-prompt"><a class="no-style" href="https://piped.cc">DDrive</a></div>
+            <div class="logo terminal-prompt"><a class="no-style" href="https://github.com/forscht/ddrive">DDrive</a>
+            </div>
         </header>
+        <nav class="terminal-menu">
+            <ul vocab="https://schema.org/" typeof="BreadcrumbList">
+                <li property="itemListElement" typeof="ListItem">
+                    <a property="item" typeof="WebPage" class="menu-item">
+                        <span property="name" id="dark-mode-btn">
+                            Dark
+                        </span>
+                    </a>
+                    <meta property="position" content="1">
+                </li>
+                <li property="itemListElement" typeof="ListItem">
+                    <a property="item" typeof="WebPage" class="menu-item">
+                        <span property="name" id="light-mode-btn">
+                            Light
+                        </span>
+                    </a>
+                    <meta property="position" content="2">
+                </li>
+                <li style="height: 32px;"><span><a class="github-button" href="https://github.com/forscht/ddrive"
+                                                   data-size="large" data-show-count="true"
+                                                   aria-label="Star forscht/ddrive on GitHub">Star</a></span></li>
+            </ul>
+        </nav>
     </div>
+    <p>
+        Cloud storage system using discord.
+    </p>
 </div>
 
 <div class="container">
-    <p>
-        Encrypted <a href="https://github.com/forscht/ddrive">Open Source</a> File Sharing Platform.
-    </p>
     <table id="fm-table">
         <caption>
             DDrive File Manager
@@ -84,18 +104,14 @@
                               d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
                     </svg>
                 </button>
+                <!--                Copy btn-->
                 <button type="button" id="clipboard-btn"
                         style="border: none; background: none; height:1.7rem; width: 1.7rem; vertical-align: middle; float: right"
                 >
                     <svg id="clipboard-btn" style="vertical-align: middle; height: 1.2rem; width: 1.2rem"
-                         fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                              d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"
-                              ></path>
-                        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"
-                              ></path>
-                        <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"
-                              ></path>
+                         fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
+                        <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"
+                             ></path>
                     </svg>
                 </button>
                 <!--                Upload-->
@@ -205,13 +221,14 @@
 
             return document.getElementById(id)
         }
+
         //
         // Create dynamic TR for folders
         //
         function prepareFolderTR(data) {
             const tr = document.createElement('tr')
             tr.innerHTML = `
-            <td style="border-right: none">
+            <td style="border-right: none" title="${data.name}">
                 <svg style="vertical-align: middle" xmlns="http://www.w3.org/2000/svg" width="18"
                      height="18" fill="currentColor"
                      class="bi bi-folder" viewBox="0 0 18 18">
@@ -232,7 +249,7 @@
         function prepareFileTR(data) {
             const tr = document.createElement('tr')
             tr.innerHTML = `
-            <td style="border-right: none">
+            <td style="border-right: none" title="${data.name}">
                 <svg style="vertical-align: middle" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                      fill="currentColor"
                      class="bi bi-file-text" viewBox="0 0 18 18">

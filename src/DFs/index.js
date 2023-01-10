@@ -2,6 +2,7 @@
 const https = require('https')
 const crypto = require('crypto')
 const { REST } = require('@discordjs/rest')
+const _ = require('lodash')
 const uuid = require('uuid').v4
 const AsyncStreamProcessor = require('./lib/AsyncStreamProcessor')
 const StreamChunker = require('./lib/StreamChunker')
@@ -20,6 +21,23 @@ class DiscordFileSystem {
         this.secret = opts.secret
         this.rest = new REST({ ...DEFAULT_REST_OPTS, ...opts.restOpts })
         this.lastWbIdx = 0
+
+        //
+        // Validate parameters
+        //
+        if (!this.webhooks) throw new Error('webhooks parameter is missing')
+        if (!this.webhooks.length) throw new Error('At least 1 valid webhookURL required')
+
+        if (!_.isFinite(this.chunkSize)
+            || this.chunkSize < 1
+            || this.chunkSize > 8388608) {
+            throw new Error('Invalid chunkSize - chunkSize should be valid number and > 1 and < 8388608')
+        }
+
+        const { timeout } = opts.restOpts
+        if (!_.isFinite(timeout) || timeout < 1) {
+            throw new Error('Invalid timeout - timeout should be valid number and > 0')
+        }
     }
 
     get webhookURL() {

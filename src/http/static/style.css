@@ -11,24 +11,53 @@
     serif;
     --input-style: solid;
     --display-h1-decoration: none;
+}
+
+:root.dark {
     --background-color: #222225;
     --font-color: #ffffff;
     --invert-font-color: #222225;
     --secondary-color: #a3abba;
     --tertiary-color: #a3abba;
-    --primary-color: #62c4ff;
+    --primary-color: #F05454;
     --error-color: #ff3c74;
     --progress-bar-background: #3f3f44;
-    --progress-bar-fill: #62c4ff;
+    --progress-bar-fill: #F05454;
     --code-bg-color: #3f3f44;
 }
 
+:root.light {
+    --background-color: #E8E8E8;
+    --font-color: #222831;
+    --invert-font-color: #E8E8E8;
+    --secondary-color: #a3abba;
+    --tertiary-color: #a3abba;
+    --primary-color: #F05454;
+    --error-color: #ff3c74;
+    --progress-bar-background: #3f3f44;
+    --progress-bar-fill: #F05454;
+    --code-bg-color: #3f3f44;
+
+}
+
+table {
+    /*max-height: 80%;*/
+    /*height: 500px;*/
+    /*overflow-y: scroll;*/
+}
 th {
     text-align: left;
 }
 
 table td {
     padding-left: 1rem;
+}
+
+td {
+    max-width: 25rem;
+    overflow: clip;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 table th {
@@ -46,17 +75,17 @@ table tbody td:first-child {
 }
 
 button {
-    cursor: pointer;
+    /*cursor: pointer;*/
     color: var(--font-color);
 }
 
+button:hover {
+    cursor: pointer;
+}
 button:disabled {
     cursor: unset;
     color: var(--tertiary-color);
 }
 
-body {
-    white-space: nowrap;
-    text-overflow: '----';
-    overflow: hidden
+@media only screen and (min-width: 120em) {
 }

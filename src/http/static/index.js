@@ -1,6 +1,9 @@
 /* eslint-disable no-restricted-syntax,no-loop-func */
 const table = document.getElementById('fm-table')
 const tbody = document.getElementById('tbody')
+const lightModeBtn = document.getElementById('light-mode-btn')
+const darkModeBtn = document.getElementById('dark-mode-btn')
+
 const fileInput = document.getElementById('file-input')
 
 const prevBtn = document.getElementById('previous-btn')
@@ -29,6 +32,14 @@ function makeid(length) {
     return result
 }
 
+function sort(arr, key) {
+    return arr.sort((a, b) => {
+        if (a[key] < b[key]) return -1
+        if (a[key] > b[key]) return 1
+
+        return 0
+    })
+}
 function download(url) {
     const a = document.createElement('a')
     a.href = url
@@ -97,6 +108,21 @@ function clearTableAndResetButtons() {
     resetBtns()
 }
 
+function setTheme(mode) {
+    let currMode = mode
+    if (!currMode) currMode = window.localStorage.getItem('mode') || 'dark'
+    document.documentElement.classList.add(currMode)
+    document.documentElement.classList.remove(currMode === 'dark' ? 'light' : 'dark')
+    window.localStorage.setItem('mode', currMode)
+    if (currMode === 'dark') {
+        lightModeBtn.parentNode.classList.add('active')
+        darkModeBtn.parentNode.classList.remove('active')
+    } else {
+        lightModeBtn.parentNode.classList.remove('active')
+        darkModeBtn.parentNode.classList.add('active')
+    }
+}
+
 //
 // API Operations
 //
@@ -112,10 +138,10 @@ async function refreshTable() {
     parentDirectory = body.parentId
     prevBtn.disabled = !parentDirectory
     clearTableAndResetButtons()
-    for (const directory of body.child.directories) {
+    for (const directory of sort(body.child.directories, 'name')) {
         tbody.appendChild(prepareFolderTR(directory))
     }
-    for (const file of body.child.files) {
+    for (const file of sort(body.child.files, 'name')) {
         tbody.appendChild(prepareFileTR(file))
     }
 }
@@ -215,6 +241,7 @@ async function renameFileOrFolder() {
     inputText.focus()
     disableAllBtns()
 }
+
 //
 // Event handlers
 //
@@ -234,6 +261,12 @@ async function handleClick(e) {
     }
     if (e.target.id === clipboardBtn.id) {
         copyToClipboard()
+    }
+    if (e.target.id === lightModeBtn.id) {
+        setTheme('light')
+    }
+    if (e.target.id === darkModeBtn.id) {
+        setTheme('dark')
     }
     if (selected) {
         selected.classList.remove('selected')
@@ -256,12 +289,15 @@ async function handleDoubleClick(e) {
         await refreshTable()
     }
 }
+
 function loadDataTable() {
     document.onclick = handleClick
     document.ondblclick = handleDoubleClick
     clearTableAndResetButtons()
     refreshTable().then()
     fileInput.addEventListener('change', () => uploadFile())
+
+    setTheme()
 }
 
 loadDataTable()
