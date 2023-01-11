@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const { REST } = require('@discordjs/rest')
 const querystring = require('querystring')
 
@@ -14,7 +15,8 @@ class DiscordAPI {
     constructor(opts) {
         this.channelId = opts.channelId
         // Prepare rest opts
-        const restOpts = { ...REST_OPTS, ...opts.restOpts }
+        const restOpts = _.defaults(opts.restOpts, REST_OPTS)
+
         // By default, @discordjs/rest package adds `Bot` in every outgoing
         // request's auth header but for user token it's not needed so remove the prefix
         const { type: tokenType, token } = this.extractUserToken(opts.token)
