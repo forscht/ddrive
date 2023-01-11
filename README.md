@@ -72,7 +72,7 @@ I spent several weeks finalizing this new version.  Any support is highly apprec
 7. Run - `node bin/ddrive`
 8. Navigate to `http://localhost:3000` in your browser.
 
-##### How to keep it running forever
+### How to keep it running forever
 1. Install pm2 with `npm install -g pm2`
 2. Run - `pm2 start bin/ddrive`
 3. Run - `pm2 list` to check status of ddrive
@@ -81,10 +81,13 @@ I spent several weeks finalizing this new version.  Any support is highly apprec
 ### Config variables explanation
 ```shell
 # config/.env
+
+# Required params
 DATABASE_URL= # Database URL of postgres with valid postgres uri
 
 WEBHOOKS={url1},{url2} # Webhook urls seperated by ","
 
+# Optional params
 PORT=3000 # HTTP Port where ddrive panel will start running
 
 REQUEST_TIMEOUT=60000 # Time in ms after which ddrive will abort request to discord api server. Set it high if you have very slow internet
@@ -103,7 +106,15 @@ UPLOAD_CONCURRENCY=3 # ddrive will upload this many chunks in parallel to discor
 
 ```
 
-### API Usage
+### Run using docker
+```shell
+docker run -rm -it -p 8080:8080 \
+-e PORT=8080 \
+-e WEBHOOKS={url1},{url2} \
+-e DATABASE_URL={database url} \
+--name ddrive forscht/ddrive
+```
+## API Usage
 `npm install @forscht/ddrive`
 ```javascript
 const { DFs, HttpServer } = require('@forscht/ddrive')
