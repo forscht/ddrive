@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const debug = require('debug')
+const _ = require('lodash')
 const yargs = require('yargs/yargs')(process.argv.slice(2))
 const DiscordFS = require('../src/discordFS/')
 const HTTPServer = require('../src/httpServer')
@@ -60,8 +61,16 @@ const args = yargs
 
 // Extract arguments
 const {
-    token, auth, channelId, httpPort = parseInt(process.env.PORT, 10), chunkSize, timeout
+    token, auth, channelId, httpPort = parseInt(process.env.PORT, 10)
 } = args
+
+// Parse chunkSize and timeout, if invalid value set to default
+let { chunkSize, timeout } = args
+chunkSize = parseInt(chunkSize, 10)
+if(!_.isFinite(chunkSize) || chunkSize < 1) chunkSize = undefined
+timeout = parseInt(timeout, 10)
+if(_.isFinite(timeout) || timeout < 1) timeout = undefined
+
 //
 // App entry point
 //

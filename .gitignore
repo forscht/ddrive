@@ -10,3 +10,4 @@ log.csv
 dist
 config.json
 exec
+.env
