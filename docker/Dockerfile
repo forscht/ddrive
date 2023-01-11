@@ -9,6 +9,9 @@ WORKDIR /app
 # Copy project files
 COPY --chown=node:node . /app
 
+# NPM Update
+RUN npm update -g npm
+
 # Install packages
 RUN npm install
 
