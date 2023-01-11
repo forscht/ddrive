@@ -1,4 +1,3 @@
-require('dotenv').config()
 const path = require('path')
 const _ = require('lodash')
 const knex = require('../src/HTTP/utils/knex')
@@ -68,10 +67,13 @@ const migrate = async () => {
         try {
             const dir = directories.find((d) => d.name === dirName)
             if (!dir) return
-            // console.log('Creating Dir => ', dirName)
-            await knex('directory').insert({
-                id: dir.id, name: path.basename(dirName), parentId, type: 'directory',
-            })
+            // Skip creating root dir
+            if (dirName === '/') dir.id = parentId
+            else {
+                await knex('directory').insert({
+                    id: dir.id, name: path.basename(dirName), parentId, type: 'directory',
+                })
+            }
             const childFiles = files.filter((f) => f.directoryId === dir.id)
             await Promise.all(childFiles.map((f) => createFile(f, dir.id)))
             const childDirectories = getChildDirectories(dirName)
@@ -83,7 +85,9 @@ const migrate = async () => {
         }
     }
 
-    await createDir()
+    const rootDir = await knex('directory').whereNull('parentId').first()
+    await createDir('/', rootDir.id)
+
     console.log('------------- Migration Done -------------------')
     process.exit(0)
 }

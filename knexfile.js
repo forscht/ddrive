@@ -1,3 +1,5 @@
+require('dotenv').config({ path: './config/.env' })
+
 module.exports = {
     development: {
         client: 'pg',
@@ -7,8 +9,8 @@ module.exports = {
             tableName: 'knex_migrations',
         },
         pool: {
-            min: 1,
-            max: 2,
+            min: 2,
+            max: 10,
         },
     },
     docker: {
@@ -18,8 +20,8 @@ module.exports = {
             tableName: 'knex_migrations',
         },
         pool: {
-            min: 1,
-            max: 2,
+            min: 2,
+            max: 10,
         },
     },
     production: {
@@ -30,8 +32,8 @@ module.exports = {
             tableName: 'knex_migrations',
         },
         pool: {
-            min: 1,
-            max: 2,
+            min: 2,
+            max: 10,
         },
     },
 }
