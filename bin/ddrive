@@ -69,7 +69,7 @@ let { chunkSize, timeout } = args
 chunkSize = parseInt(chunkSize, 10)
 if(!_.isFinite(chunkSize) || chunkSize < 1) chunkSize = undefined
 timeout = parseInt(timeout, 10)
-if(_.isFinite(timeout) || timeout < 1) timeout = undefined
+if(!_.isFinite(timeout) || timeout < 1) timeout = undefined
 
 //
 // App entry point
