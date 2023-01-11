@@ -25,7 +25,7 @@
 
 https://user-images.githubusercontent.com/59018146/167635903-48cdace0-c383-4e7d-a037-4a32eaa4ab69.mp4
 
-#### Current development branch `3.x`
+#### Current development branch `4.x`
 
 ### Features
 - Theoretically unlimited file size thanks to splitting the file in 8mb chunks using nodejs streams API.
@@ -51,7 +51,7 @@ https://user-images.githubusercontent.com/59018146/167635903-48cdace0-c383-4e7d-
 ### Setting up the program
 #### With NPM, Open terminal/cmd and run following commands.
 ```shell
-npm install -g @forscht/ddrive
+npm install -g @forscht/ddrive@~3
 ddrive --token <bot token> --channelId <guild channel id>
 # Open http://localhost:8080 in browser
 # use <ddrive help> for more info
@@ -61,14 +61,14 @@ ddrive --token <bot token> --channelId <guild channel id>
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/forscht/ddrive/tree/3.x)
 
 #### One Click Deploy with Replit:
-[![Deploy](https://replit.com/badge/github/forscht/ddrive)](https://replit.com/github/forscht/ddrive)
+[![Deploy](https://replit.com/badge/github/forscht/ddrive)](https://replit.com/github/forscht/ddrive/tree/3.x)
 
 #### One Click Deploy with Railway:
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/ALJmfS?referralCode=27ekYT)
 
 #### With Docker
 ```shell
-docker run --rm -p 8080:8080 -it forscht/ddrive --port 8080 --token <bot-token> --channelId <guild-channel-id>
+docker run --rm -p 8080:8080 -it forscht/ddrive:3.7.5 --port 8080 --token <bot-token> --channelId <guild-channel-id>
 # Open http://localhost:8080 in browser
 # use <docker run --rm -it forscht/ddrive help> for more info
 ```
