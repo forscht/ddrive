@@ -102,8 +102,9 @@ PUBLIC_ACCESS=READ_ONLY_FILE # If you want to give read only access to panel or 
 UPLOAD_CONCURRENCY=3 # ddrive will upload this many chunks in parallel to discord. If you have fast internet increasing it will significantly increase performance at cost of cpu/disk usage                                              
 
 ```
-`npm install @forscht/ddrive`
+
 ### API Usage
+`npm install @forscht/ddrive`
 ```javascript
 const { DFs, HttpServer } = require('@forscht/ddrive')
 
@@ -138,7 +139,7 @@ run().then()
 
 ```
 
-### Migrate from v3 to v4
+## Migrate from v3 to v4
 Migrating ddrive v3 to v4 is one way process once you migrate ddrive to v4 and add new files you can't migrate new files to v3 again but you can still use v3 with old files.
 
 1. Clone this project
