@@ -55,8 +55,8 @@ const getDirectory = async (id = null, child = false) => {
             `(select json_agg(r) FROM (select "d".*, sum(b.size) as size
                          from "directory" as "d"
                                   left join "block" as "b" on "d"."id" = "b"."fileId"
-                         where "d"."parentId" = '${id}'
-                         group by "d"."id") r ) as child`,
+                         where "d"."parentId" = ?
+                         group by "d"."id") r ) as child`, [id],
         ))
     }
 
