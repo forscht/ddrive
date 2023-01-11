@@ -38,16 +38,16 @@
 
 This next major version release 4.0 is ddrive written from scratch. It comes with most requested features and several improvements.
 
-- Now uses postgres to store files metadata. Why?
+- Now uses `postgres` to store files metadata. Why?
   - Once you have huge amount of data stored on ddrive it makes ddrive significantly slow to start since ddrive have to fetch all the metadata from discord channel (For 3 TB of data it takes me 30+ minutes.)
   - With postgres, deleting file is extremely faster because now ddrive don't have to delete files on discord channel and just need to remove from metadata only.
   - With postgres now it's possible to move or rename files/folders which was impossible with older version.
-- Added support for rename files/folders.
-- Added support to move file/folder (Only via API, Not sure how to do it with frontend, PR welcomes.)
-- Now uses Webhooks instead of bot/user tokens to bypass the discord rate limit
+- Added support for `rename` files/folders.
+- Added support to `move` file/folder (Only via API, Not sure how to do it with frontend, PR welcomes.)
+- Now uses `webhooks` instead of `bot/user tokens` to bypass the discord rate limit
 - DDrive now uploads file chunks in parallel with limit. Which significantly increase the upload speed. I was able to upload file with 5GB of size in just 85 seconds.
-- Public access mode - It is not now possible to provide users readonly access with just one config var
-- Batch upload files - Now you can upload multiple files at once from panel. (DClone is not supported in this version)
+- Public access mode - It is not now possible to provide users read-only access with just one config var
+- Batch upload files - Now you can upload multiple files at once from panel. (DClone support has been removed from this version)
 - Bug fix - `download reset` for few mobile devices
 - Added support for optional encryption to files uploaded to discord
 - DDrive now has proper rest API with OpenAPI 3.1 standards
