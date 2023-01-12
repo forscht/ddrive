@@ -56,12 +56,17 @@ const args = yargs
         required: false,
         type: 'number'
     })
+    .options('metadata', {
+        describe: 'Enables route /metadata where all the file metadata will be sent as json',
+        required: false,
+        type: 'string'
+    })
     .config()
     .argv
 
 // Extract arguments
 const {
-    token, auth, channelId, httpPort = parseInt(process.env.PORT, 10)
+    token, auth, channelId, httpPort = parseInt(process.env.PORT, 10), metadata
 } = args
 
 // Parse chunkSize and timeout, if invalid value set to default
@@ -80,7 +85,7 @@ const startApp = async () => {
     await discordFS.load() // Build file index
 
     // Create HTTP Server
-    const httpServer = new HTTPServer(discordFS, { httpPort, auth })
+    const httpServer = new HTTPServer(discordFS, { httpPort, auth, metadata })
     httpServer.build()
 }
 
