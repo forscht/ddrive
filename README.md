@@ -114,6 +114,9 @@ docker run -rm -it -p 8080:8080 \
 -e DATABASE_URL={database url} \
 --name ddrive forscht/ddrive
 ```
+### One Click Deploy with Railway
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/tL53xa)
+
 ## API Usage
 `npm install @forscht/ddrive`
 ```javascript
