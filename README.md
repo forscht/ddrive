@@ -110,6 +110,8 @@ Options:
                    aborted. Increase it if you have slow internet       [number]
       --chunkSize  Size of chunk (part) to be uploaded to discord in bytes. Max
                    8MB for bot token and 500MB for nitro user token     [number]
+      --metadata   Enables route /metadata where all the file metadata will be
+                   sent as json                                         [string]
       --config     Path to JSON config file
 ```
 
