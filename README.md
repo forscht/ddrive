@@ -155,11 +155,13 @@ Migrating ddrive v3 to v4 is one way process once you migrate ddrive to v4 and a
 
 1. Clone this project
 2. Create few webhooks (1 webhook/text channel). Do not create webhook on old text channel where you have already stored v3 data.
-3. Start old ddrive server and open -> `http://{ddriveURL}/raw`
-4. Save JSON as old_data.json in cloned ddrive directory
-5. Put valid `DATABASE_URL` in `config/.env`
-6. Run `node bin/migrate old_data.json`
-7. After few seconds once process is done you should see the message `Migration is done`
+3. Take pull of latest ddrive v3
+4. Start ddrive v3 with option `--metadata=true`. Ex - `ddrive --channelId {id} --token {token} --metadata=true`
+5. Open `localhost:{ddrive-port}/metadata` in browser
+6. Save JSON as old_data.json in cloned ddrive directory
+7. Put valid `DATABASE_URL` in `config/.env`
+8. Run `node bin/migrate old_data.json`
+9. After few seconds once process is done you should see the message `Migration is done`
 
 Feel free to create [new issue](https://github.com/forscht/ddrive/issues/new) if it's not working for you or need any help.
 
