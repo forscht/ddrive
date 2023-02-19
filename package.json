@@ -35,17 +35,17 @@
     "extends": "@forscht"
   },
   "dependencies": {
-    "@discordjs/rest": "^1.0.0",
+    "@discordjs/rest": "^1.5.0",
     "@fastify/auth": "^4.2.0",
-    "@fastify/multipart": "^7.3.0",
-    "@fastify/static": "^6.6.0",
+    "@fastify/multipart": "^7.4.1",
+    "@fastify/static": "^6.9.0",
     "dotenv": "^16.0.3",
-    "fastify": "^4.11.0",
-    "knex": "^2.4.0",
+    "fastify": "^4.13.0",
+    "knex": "^2.4.2",
     "lodash": "^4.17.21",
     "mime-types": "^2.1.35",
-    "pg": "^8.8.0",
-    "uuid": "^8.3.2"
+    "pg": "^8.9.0",
+    "uuid": "^9.0.0"
   },
   "keywords": [
     "discord",

@@ -7,3 +7,4 @@ test/coverage/
 !**/.keep
 dist
 .env
+webhook.txt

@@ -8,7 +8,7 @@ const VALID_PUBLIC_ACCESS = ['READ_ONLY_FILE', 'READ_ONLY_PANEL']
 
 // If webhook file exist load webhook urls from file
 const loadWebhooks = () => {
-    const filePath = path.join(process.cwd(), 'webhook.txt')
+    const filePath = path.join('./config/', 'webhook.txt')
     const fileExist = fs.existsSync(filePath)
     if (!fileExist) return undefined
     const webhookFileBuffer = fs.readFileSync(filePath)

@@ -25,3 +25,5 @@ docker/
 .dockerignore
 
 .env
+
+webhook.txt
