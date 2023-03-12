@@ -17,7 +17,7 @@ module.exports = (dfs, opts) => {
     commonSchemas.forEach((schema) => fastify.addSchema(schema))
 
     // Enable Multipart upload
-    fastify.register(FastifyMultipart)
+    fastify.register(FastifyMultipart, { limits: { fileSize: Infinity } })
 
     // Load Auth and then register the routes
     fastify.decorate('basicAuth', Auth(opts.authOpts))
