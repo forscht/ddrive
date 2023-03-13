@@ -4,3 +4,4 @@ config.json
 docker/Dockerfile
 .git
 .gitignore
+webhook.txt

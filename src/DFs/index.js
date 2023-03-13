@@ -46,7 +46,7 @@ class DiscordFileSystem {
             ? 0
             : this.lastWbIdx + 1
 
-        return webhookURL.replace('https://discord.com/api', '')
+        return webhookURL.replace(/https:\/\/\w*\.?discord\.com\/api/gm, '')
     }
 
     /**
