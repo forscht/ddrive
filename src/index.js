@@ -1,4 +1,4 @@
 const DFs = require('./DFs')
-const HttpServer = require('./HTTP')
+const HttpServer = require('./http')
 
 module.exports = { DFs, HttpServer }

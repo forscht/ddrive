@@ -1,6 +1,6 @@
 const path = require('path')
 const _ = require('lodash')
-const knex = require('../src/HTTP/utils/knex')
+const knex = require('../src/http/api/utils/knex')
 
 const normalizePath = (p, addLastSlash = false) => {
     let r = path.posix.normalize(p.replace(/\\/g, '/'))

@@ -56,6 +56,7 @@ const DFsConfig = () => {
     // Get webhook URLs
     let webhooks = loadWebhooks()
     if (!webhooks) webhooks = WEBHOOKS.split(',')
+    webhooks = webhooks.filter((w) => !!w)
     if (!webhooks || !webhooks.length) {
         throw new Error('Webhook URLs missing. Webhook URLs seperated by "," in .env and seperated by "\n" webhook.txt file supported')
     }

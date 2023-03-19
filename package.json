@@ -16,7 +16,7 @@
   "scripts": {
     "start": "node bin/ddrive",
     "railway": "npm run migration:up && npm start",
-    "lint": "eslint --ext mjs,js,ts . --ignore-pattern 'src/HTTP/static'",
+    "lint": "eslint --ext mjs,js,ts . --ignore-pattern 'src/http/html'",
     "migration:latest": "knex migrate:latest",
     "migration:up": "knex migrate:up",
     "migration:down": "knex migrate:down",
