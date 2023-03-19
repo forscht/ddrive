@@ -117,6 +117,8 @@ docker run -rm -it -p 8080:8080 \
 ### One Click Deploy with Railway
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/tL53xa)
 
+### Setup tutorials
+- Setup under 4 minutes in local/cloud server using `neon.tech` postgres - [Youtube](https://youtu.be/Zvr1BHjrYC0)
 ## API Usage
 `npm install @forscht/ddrive`
 ```javascript
