@@ -172,3 +172,4 @@ Migrating ddrive v3 to v4 is one way process once you migrate ddrive to v4 and a
 
 Feel free to create [new issue](https://github.com/forscht/ddrive/issues/new) if it's not working for you or need any help.
 
+[Discord Support server](https://discord.gg/3TCZRYafhW)
