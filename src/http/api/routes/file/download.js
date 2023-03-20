@@ -49,8 +49,7 @@ module.exports.handler = async (req, reply) => {
     const resHeaders = {
         'Content-Length': file.size,
         'Accept-Ranges': 'bytes',
-        // eslint-disable-next-line no-control-regex
-        'Content-Disposition': `attachment; filename=${file.name.replace(/[^\x00-\x7F]/g, '')}`,
+        'Content-Disposition': `attachment; filename=${encodeURI(file.name)}`,
     }
     const mimeType = mime.lookup(path.extname(file.name))
     if (mimeType) resHeaders['Content-Type'] = mimeType
