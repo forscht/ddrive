@@ -2,6 +2,8 @@
 
 <p align="center"><strong> Turn Discord into a datastore that can manage and store your files. </strong></p>
 <p align="center">
+    <a href="https://discord.gg/3TCZRYafhW">
+        <img src="https://img.shields.io/discord/1020806104881561754?color=5865F2&logo=discord&logoColor=white" alt="Discord server" /></a>
     <a href="https://github.com/forscht/ddrive/actions/workflows/lint.yml">
         <img src="https://github.com/forscht/ddrive/actions/workflows/lint.yml/badge.svg">
     </a>
