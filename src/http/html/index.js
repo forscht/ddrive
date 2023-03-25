@@ -65,12 +65,7 @@ function fallbackCopyTextToClipboard(text) {
 }
 
 function copyTextToClipboard(text) {
-    if (!navigator.clipboard) {
-        fallbackCopyTextToClipboard(text)
-
-        return
-    }
-    navigator.clipboard.writeText(text).then(() => {}, () => {})
+    navigator.clipboard?.writeText(text).catch(() => fallbackCopyTextToClipboard(text))
 }
 
 //
