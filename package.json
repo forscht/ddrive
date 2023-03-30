@@ -1,6 +1,6 @@
 {
   "name": "@forscht/ddrive",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "A lightweight cloud storage system using discord as storage device written in nodejs",
   "main": "src/index.js",
   "author": "Darshan Patel <darshanhihoriya@gmail.com> (https://github.com/forscht/ddrive)",

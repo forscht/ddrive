@@ -4,6 +4,7 @@ const crypto = require('crypto')
 const { REST } = require('@discordjs/rest')
 const _ = require('lodash')
 const uuid = require('uuid').v4
+const AsyncStreamProcessorWithConcurrency = require('./lib/AsyncStreamProcessorWithConcurrency')
 const AsyncStreamProcessor = require('./lib/AsyncStreamProcessor')
 const StreamChunker = require('./lib/StreamChunker')
 
@@ -160,7 +161,7 @@ class DiscordFileSystem {
             stream
                 .on('aborted', () => reject(new Error('file upload aborted'))) // On HTTP request abort delete all the messages and reject promise
                 .pipe(new StreamChunker(this.chunkSize))
-                .pipe(new AsyncStreamProcessor(processChunk, this.maxUploadConc))
+                .pipe(new AsyncStreamProcessorWithConcurrency(processChunk, this.maxUploadConc))
                 .on('finish', () => resolve(parts))
                 .on('error', (err) => reject(err))
         })
