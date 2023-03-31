@@ -126,7 +126,7 @@ class DiscordFileSystem {
                         decipher.on('error', (err) => reject(err))
                         res.pipe(decipher).pipe(new AsyncStreamProcessor(handleData))
                     } else {
-                        res.pipe(new AsyncStreamProcessor(handleData))
+                        res.pipe(new AsyncStreamProcessorWithConcurrency(handleData))
                         res.on('end', () => resolve())
                     }
 

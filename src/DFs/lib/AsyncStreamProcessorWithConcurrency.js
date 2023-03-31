@@ -30,17 +30,20 @@ class AsyncStreamProcessorWithConcurrency extends Transform {
             callback(null)
         } else this.lastCallback = callback
         this.chunkProcessor(chunk, this.chunkCount)
-            .then(() => {
-                this.concurrent -= 1
-                if (this.lastCallback) {
-                    this.lastCallback()
-                    this.lastCallback = null
-                }
-                if (this.concurrent === 0 && this.pendingFinish) {
-                    this.pendingFinish()
-                    this.pendingFinish = null
-                }
-            })
+            .then(
+                () => {
+                    this.concurrent -= 1
+                    if (this.lastCallback) {
+                        const cb = this.lastCallback
+                        this.lastCallback = null
+                        cb()
+                    }
+                    if (this.concurrent === 0 && this.pendingFinish) {
+                        this.pendingFinish()
+                        this.pendingFinish = null
+                    }
+                },
+            )
             .catch((err) => this.emit('error', err))
         this.chunkCount += 1
     }
