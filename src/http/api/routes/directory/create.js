@@ -18,6 +18,10 @@ module.exports.opts = {
 }
 
 module.exports.handler = async (req, reply) => {
-    const directory = await db.createDirectoryOrFile(req.body)
-    reply.send(directory)
+    if (req.body.name != "") {
+        const directory = await db.createDirectoryOrFile(req.body)
+        reply.send(directory)
+    } else {
+        reply.send('Directory name is empty')
+    }
 }
