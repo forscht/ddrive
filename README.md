@@ -72,7 +72,7 @@ I spent several weeks finalizing this new version.  Any support is highly apprec
 3. Setup postgres using docker, if you already don't have it running
    - `cd .devcontainer`
    - `docker-compose up -d`
-4. Copy `config/env_sample` to `config/.env` and make necessary changes
+4. Copy `config/.env_sample` to `config/.env` and make necessary changes
 5. Optional - If you have lots of webhookURLs you can put those in `webhook.txt` with `\n` seperated.
 6. Run - `npm run migration:up`
 7. Run - `node bin/ddrive`
