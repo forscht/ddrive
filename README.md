@@ -71,8 +71,8 @@ I spent several weeks finalizing this new version.  Any support is highly apprec
 2. Create few webhook urls. For better performance and to avoid rate limit at least create 5 with 1 webhook / text channel. ([How to create webhook url](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks))
 3. Setup postgres using docker, if you already don't have it running
    - `cd .devcontainer`
-   - `docker compose up -d`
-4. Copy `config/env_sample` to `config/.env` and make necessary changes
+   - `docker-compose up -d`
+4. Copy `config/.env_sample` to `config/.env` and make necessary changes
 5. Optional - If you have lots of webhookURLs you can put those in `webhook.txt` with `\n` seperated.
 6. Run - `npm run migration:up`
 7. Run - `node bin/ddrive`
