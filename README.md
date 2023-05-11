@@ -52,7 +52,7 @@ This next major version release 4.0 is ddrive written from scratch. It comes wit
 - Added support to `move` file/folder (Only via API, Not sure how to do it with frontend, PR welcomes.)
 - Now uses `webhooks` instead of `bot/user tokens` to bypass the discord rate limit
 - DDrive now uploads file chunks in parallel with limit. Which significantly increase the upload speed. I was able to upload file with `5GB of size in just 85 seconds`.
-- Public access mode - It is not now possible to provide users read-only access with just one config var
+- Public access mode - It is now possible to provide users read-only access with just one config var
 - Batch upload files - Now you can upload multiple files at once from panel. (DClone support has been removed from this version)
 - Bug fix - `download reset` for few mobile devices
 - Added support for optional encryption to files uploaded to discord
