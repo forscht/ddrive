@@ -32,7 +32,7 @@ https://user-images.githubusercontent.com/59018146/167635903-48cdace0-c383-4e7d-
 ### Live demo at [ddrive.forscht.dev](https://ddrive.forscht.dev/)
 
 ### Features
-- Theoretically unlimited file size, thanks to splitting the file in 8mb chunks using nodejs streams API.
+- Theoretically unlimited file size, thanks to splitting the file in 24mb chunks using nodejs streams API.
 - Simple yet robust HTTP front end 
 - Rest API with OpenAPI 3.1 specifications.
 - Tested with storing 4000 GB of data on single discord channel (With max file size of 16GB).
