@@ -98,7 +98,7 @@ PORT=3000 # HTTP Port where ddrive panel will start running
 
 REQUEST_TIMEOUT=60000 # Time in ms after which ddrive will abort request to discord api server. Set it high if you have very slow internet
 
-CHUNK_SIZE=7864320 # ChunkSize in bytes. You should probably never touch this and if you do  don't set it to more than 8MB, with discord webhooks you can't upload file bigger than 8MB
+CHUNK_SIZE=25165824 # ChunkSize in bytes. You should probably never touch this and if you do  don't set it to more than 25MB, with discord webhooks you can't upload file bigger than 25MB
 
 SECRET=someverysecuresecret # If you set this every files on discord will be stored using strong encryption, but it will cause significantly high cpu usage, so don't use it unless you're storing important stuff
 
@@ -131,7 +131,7 @@ docker run -rm -it -p 8080:8080 \
 const { DFs, HttpServer } = require('@forscht/ddrive')
 
 const DFsConfig = {
-  chunkSize: 7864320,
+  chunkSize: 25165824,
   webhooks: 'webhookURL1,webhookURL2',
   secret: 'somerandomsecret',
   maxConcurrency: 3, // UPLOAD_CONCURRENCY
