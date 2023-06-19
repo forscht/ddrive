@@ -8,7 +8,7 @@ const AsyncStreamProcessorWithConcurrency = require('./lib/AsyncStreamProcessorW
 const AsyncStreamProcessor = require('./lib/AsyncStreamProcessor')
 const StreamChunker = require('./lib/StreamChunker')
 
-const DEFAULT_CHUNK_SIZE = 7864320 // 7.5MB
+const DEFAULT_CHUNK_SIZE = 25165824 // 24MB
 const DEFAULT_ENCRYPTION = 'aes-256-ctr'
 const DEFAULT_REST_OPTS = { version: 10, timeout: 60000 }
 const DEFAULT_MAX_UPLOAD_CONCURRENCY = 3
@@ -31,8 +31,8 @@ class DiscordFileSystem {
 
         if (!_.isFinite(this.chunkSize)
             || this.chunkSize < 1
-            || this.chunkSize > 8388608) {
-            throw new Error('Invalid chunkSize - chunkSize should be valid number and > 1 and < 8388608')
+            || this.chunkSize > 26109542) {
+            throw new Error('Invalid chunkSize - chunkSize should be valid number and > 1 and < 26109542')
         }
 
         const { timeout } = opts.restOpts

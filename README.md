@@ -32,7 +32,7 @@ https://user-images.githubusercontent.com/59018146/167635903-48cdace0-c383-4e7d-
 ### Live demo at [ddrive.forscht.dev](https://ddrive.forscht.dev/)
 
 ### Features
-- Theoretically unlimited file size, thanks to splitting the file in 8mb chunks using nodejs streams API.
+- Theoretically unlimited file size, thanks to splitting the file in 24mb chunks using nodejs streams API.
 - Simple yet robust HTTP front end 
 - Rest API with OpenAPI 3.1 specifications.
 - Tested with storing 4000 GB of data on single discord channel (With max file size of 16GB).
@@ -52,7 +52,7 @@ This next major version release 4.0 is ddrive written from scratch. It comes wit
 - Added support to `move` file/folder (Only via API, Not sure how to do it with frontend, PR welcomes.)
 - Now uses `webhooks` instead of `bot/user tokens` to bypass the discord rate limit
 - DDrive now uploads file chunks in parallel with limit. Which significantly increase the upload speed. I was able to upload file with `5GB of size in just 85 seconds`.
-- Public access mode - It is not now possible to provide users read-only access with just one config var
+- Public access mode - It is now possible to provide users read-only access with just one config var
 - Batch upload files - Now you can upload multiple files at once from panel. (DClone support has been removed from this version)
 - Bug fix - `download reset` for few mobile devices
 - Added support for optional encryption to files uploaded to discord
@@ -71,8 +71,8 @@ I spent several weeks finalizing this new version.  Any support is highly apprec
 2. Create few webhook urls. For better performance and to avoid rate limit at least create 5 with 1 webhook / text channel. ([How to create webhook url](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks))
 3. Setup postgres using docker, if you already don't have it running
    - `cd .devcontainer`
-   - `docker compose up -d`
-4. Copy `config/env_sample` to `config/.env` and make necessary changes
+   - `docker-compose up -d`
+4. Copy `config/.env_sample` to `config/.env` and make necessary changes
 5. Optional - If you have lots of webhookURLs you can put those in `webhook.txt` with `\n` seperated.
 6. Run - `npm run migration:up`
 7. Run - `node bin/ddrive`
@@ -98,7 +98,7 @@ PORT=3000 # HTTP Port where ddrive panel will start running
 
 REQUEST_TIMEOUT=60000 # Time in ms after which ddrive will abort request to discord api server. Set it high if you have very slow internet
 
-CHUNK_SIZE=7864320 # ChunkSize in bytes. You should probably never touch this and if you do  don't set it to more than 8MB, with discord webhooks you can't upload file bigger than 8MB
+CHUNK_SIZE=25165824 # ChunkSize in bytes. You should probably never touch this and if you do  don't set it to more than 25MB, with discord webhooks you can't upload file bigger than 25MB
 
 SECRET=someverysecuresecret # If you set this every files on discord will be stored using strong encryption, but it will cause significantly high cpu usage, so don't use it unless you're storing important stuff
 
@@ -131,7 +131,7 @@ docker run -rm -it -p 8080:8080 \
 const { DFs, HttpServer } = require('@forscht/ddrive')
 
 const DFsConfig = {
-  chunkSize: 7864320,
+  chunkSize: 25165824,
   webhooks: 'webhookURL1,webhookURL2',
   secret: 'somerandomsecret',
   maxConcurrency: 3, // UPLOAD_CONCURRENCY

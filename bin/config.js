@@ -64,7 +64,7 @@ const DFsConfig = () => {
     let chunkSize = parseInt(CHUNK_SIZE, 10)
     if (!_.isFinite(chunkSize)
         || chunkSize < 1
-        || chunkSize > 8388608) chunkSize = 7864320 // 7.5 MB
+        || chunkSize > 26109542) chunkSize = 25165824 // 24 MB
 
     // Set proper request timeout
     let timeout = parseInt(REQUEST_TIMEOUT, 10)
