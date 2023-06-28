@@ -1,11 +1,9 @@
-bin/pm2.yaml
 .idea/
 node_modules/
 .vscode/
 .history/
 .DS_Store
 test/coverage/
-log.csv
 !**/.keep
 dist
 config.json

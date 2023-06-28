@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const { Transform } = require('stream')
 
 class StreamChunker extends Transform {

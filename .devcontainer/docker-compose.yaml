@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  postgres:
+    container_name: ddrive-postgres
+    image: postgres
+    volumes:
+      - ddrive_data:/var/lib/postgresql/data
+    ports:
+      - "5429:5432"
+    environment:
+      POSTGRES_USER: ddrive
+      POSTGRES_DB: ddrive
+      POSTGRES_PASSWORD: ddrive
+volumes:
+  ddrive_data:

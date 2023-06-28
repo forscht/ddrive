@@ -1,6 +1,6 @@
 {
   "name": "@forscht/ddrive",
-  "version": "3.7.7",
+  "version": "4.3.0",
   "description": "A lightweight cloud storage system using discord as storage device written in nodejs",
   "main": "src/index.js",
   "author": "Darshan Patel <darshanhihoriya@gmail.com> (https://github.com/forscht/ddrive)",
@@ -15,12 +15,14 @@
   },
   "scripts": {
     "start": "node bin/ddrive",
-    "lint": "eslint --ext mjs,js,ts ."
+    "railway": "npm run migration:up && npm start",
+    "lint": "eslint --ext mjs,js,ts . --ignore-pattern 'src/http/html'",
+    "migration:latest": "knex migrate:latest",
+    "migration:up": "knex migrate:up",
+    "migration:down": "knex migrate:down",
+    "migration:make": "knex migrate:make"
   },
-  "bin": {
-    "ddrive": "bin/ddrive",
-    "dclone": "bin/dclone"
-  },
+  "bin": {},
   "engines": {
     "node": "16.x"
   },
@@ -28,14 +30,23 @@
     "@forscht/eslint-config": "latest"
   },
   "eslintConfig": {
+    "env": {
+      "browser": true
+    },
     "extends": "@forscht"
   },
   "dependencies": {
     "@discordjs/rest": "^1.0.0",
-    "debug": "^4.3.2",
+    "@fastify/auth": "^4.2.0",
+    "@fastify/multipart": "^7.3.0",
+    "@fastify/static": "^6.6.0",
+    "dotenv": "^16.0.3",
+    "fastify": "^4.11.0",
+    "knex": "^2.4.0",
     "lodash": "^4.17.21",
-    "uuid": "^8.3.2",
-    "yargs": "^17.1.1"
+    "mime-types": "^2.1.35",
+    "pg": "^8.8.0",
+    "uuid": "^8.3.2"
   },
   "keywords": [
     "discord",

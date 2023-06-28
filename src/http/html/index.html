@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="ie=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="#ffffff" name="msapplication-TileColor"/>
+    <meta content="#ffffff" name="theme-color"/>
+    <title>DDrive - Encrypted Open Source File Sharing</title>
+    <link href="favicon.png" rel="shortcut icon" type="image/png">
+    <link href="favicon.png" rel="shortcut icon" sizes="196x196">
+    <link href="favicon.png" rel="apple-touch-icon">
+    <meta content="website" property="og:type"/>
+    <meta content="DDrive" property="og:title"/>
+    <meta content="https://github.com/forscht/ddrive" property="og:url"/>
+    <meta content="Encrypted Open Source File Sharing." property="og:description"/>
+    <meta content="/favicon.png" property="og:image"/>
+    <meta
+            content="DDrive - Encrypted Open Source File Sharing Platform."
+            name="description"
+    />
+    <link rel="manifest" href="manifest.json">
+    <link href="normalize.css" rel="stylesheet"/>
+    <link href="https://unpkg.com/terminal.css@0.7.2/dist/terminal.min.css" rel="stylesheet"/>
+    <link href="style.css" rel="stylesheet"/>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+<body class="terminal">
+<div class="container">
+    <div class="terminal-nav">
+        <header class="terminal-logo">
+            <div class="logo terminal-prompt"><a class="no-style" href="https://github.com/forscht/ddrive">DDrive</a>
+            </div>
+        </header>
+        <nav class="terminal-menu">
+            <ul vocab="https://schema.org/" typeof="BreadcrumbList">
+                <li property="itemListElement" typeof="ListItem">
+                    <a property="item" typeof="WebPage" class="menu-item">
+                        <span property="name" id="dark-mode-btn">
+                            Dark
+                        </span>
+                    </a>
+                    <meta property="position" content="1">
+                </li>
+                <li property="itemListElement" typeof="ListItem">
+                    <a property="item" typeof="WebPage" class="menu-item">
+                        <span property="name" id="light-mode-btn">
+                            Light
+                        </span>
+                    </a>
+                    <meta property="position" content="2">
+                </li>
+                <li style="height: 32px;"><span><a class="github-button" href="https://github.com/forscht/ddrive"
+                                                   data-size="large" data-show-count="true"
+                                                   aria-label="Star forscht/ddrive on GitHub">Star</a></span></li>
+            </ul>
+        </nav>
+    </div>
+    <p>
+        Cloud storage system using discord.
+    </p>
+</div>
+
+<div class="container">
+    <table id="fm-table">
+        <caption>
+            DDrive File Manager
+        </caption>
+        <thead>
+        </thead>
+        <thead>
+        <tr>
+            <th style="padding-right: 1rem" colspan="4">
+                <!--                Previous-->
+                <button type="button" id="previous-btn"
+                        style="border: none; background: none; height:1.7rem; width: 1.7rem; vertical-align: middle">
+                    <svg id="previous-btn" style="vertical-align: middle; height: 1.7rem; width: 1.7rem"
+                         fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                              d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"
+                        ></path>
+                    </svg>
+                </button>
+                <!--                Trash can-->
+                <button type="button" id="trash-btn"
+                        style="border: none; background: none; height:1.7rem; width: 1.7rem; vertical-align: middle; float: right">
+                    <svg id="trash-btn" style="vertical-align: middle; height: 1.2rem; width: 1.2rem"
+                         fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"
+                        ></path>
+                        <path fill-rule="evenodd"
+                              d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                        ></path>
+                    </svg>
+                </button>
+                <!--                Rename-->
+                <button type="button" id="rename-btn"
+                        style="border: none; background: none; height:1.7rem; width: 1.7rem; vertical-align: middle; float: right"
+                >
+                    <svg id="rename-btn" style="vertical-align: middle; height: 1.2rem; width: 1.2rem"
+                         fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
+                        <path fill-rule="evenodd"
+                              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
+                    </svg>
+                </button>
+                <!--                Copy btn-->
+                <button type="button" id="clipboard-btn"
+                        style="border: none; background: none; height:1.7rem; width: 1.7rem; vertical-align: middle; float: right"
+                >
+                    <svg id="clipboard-btn" style="vertical-align: middle; height: 1.2rem; width: 1.2rem"
+                         fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
+                        <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"
+                             ></path>
+                    </svg>
+                </button>
+                <!--                Upload-->
+                <input id='file-input' type='file' hidden multiple/>
+                <button type="button" id="upload-btn"
+                        style="border: none; background: none; height:1.7rem; width: 1.7rem; vertical-align: middle; float: right">
+                    <svg id="upload-btn" style="vertical-align: middle; height: 1.2rem; width: 1.2rem"
+                         fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"
+                        ></path>
+                        <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"
+                        ></path>
+                    </svg>
+                </button>
+                <!--                Create Folder-->
+                <button type="button" id="create-btn"
+                        style="border: none; background: none; height:1.7rem; width: 1.7rem; vertical-align: middle; float: right">
+                    <svg id="create-btn" style="vertical-align: middle; height: 1.2rem; width: 1.2rem"
+                         fill="currentColor" class="bi bi-folder-plus" viewBox="0 0 16 16">
+                        <path d="m.5 3 .04.87a1.99 1.99 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2zm5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19c-.24 0-.47.042-.683.12L1.5 2.98a1 1 0 0 1 1-.98h3.672z"
+                        ></path>
+                        <path d="M13.5 10a.5.5 0 0 1 .5.5V12h1.5a.5.5 0 1 1 0 1H14v1.5a.5.5 0 1 1-1 0V13h-1.5a.5.5 0 0 1 0-1H13v-1.5a.5.5 0 0 1 .5-.5z"
+                        ></path>
+                    </svg>
+                </button>
+            </th>
+        </tr>
+        </thead>
+        <thead>
+        <tr>
+            <th style="border-right: none;">Title</th>
+            <th style="border-left: none;border-right: none">Size</th>
+            <th style="border-left: none">Created At</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        </tbody>
+    </table>
+    <section id="progress-section">
+    </section>
+
+    <p>Built with ❤️ by <a href="https://github.com/forscht">Darshan H.<br></a> Licensed under the <a
+            href="https://github.com/forscht/ddrive/blob/main/LICENSE">MIT License.</a></p>
+    <hr/>
+    <script src="index.js"></script>
+    <script>
+        document.documentElement.classList.add('dark')
+        if (navigator.serviceWorker) {
+            navigator.serviceWorker.register('./sw.js')
+                .then(function (registration) {
+                    console.log('Excellent, registered with scope: ', registration.scope)
+                })
+        }
+
+        // Fake click upload file button
+        document.getElementById('upload-btn')
+            .addEventListener('click', function () {
+                document.getElementById('file-input')
+                    .click()
+            })
+
+        //
+        // Progress bar section code
+        //
+        const progressSection = document.getElementById('progress-section')
+
+        function createProgressBar(id, title) {
+            const progressDiv = document.createElement('div')
+            progressDiv.setAttribute('id', `${id}-div`)
+            progressDiv.innerHTML = `
+            <p>${title}</p>
+            <div class="progress-bar progress-bar-show-percent">
+                <div id="${id}-progress-bar" class="progress-bar-filled" style="width: 0" data-filled="Porgress 0%"></div>
+            </div>`
+            progressSection.appendChild(progressDiv)
+        }
+
+        function updateProgressBar(id, per) {
+            const pbar = document.getElementById(`${id}-progress-bar`)
+            pbar.style.width = `${per}%`
+            pbar.setAttribute('data-filled', `Progress ${per}%`)
+        }
+
+        function deleteProgressBar(id, timeout = 3000) {
+            const progressDiv = document.getElementById(`${id}-div`)
+            setTimeout(() => progressSection.removeChild(progressDiv), timeout)
+        }
+
+        //
+        // New placeholder TR for Folder
+        //
+        function createFolderTR(id){
+            const tr = document.createElement('tr')
+            tr.innerHTML = `
+            <td style="border-right: none">
+                <svg style="vertical-align: middle" xmlns="http://www.w3.org/2000/svg" width="18"
+                     height="18" fill="currentColor"
+                     class="bi bi-folder" viewBox="0 0 18 18">
+                    <path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4H2.19zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707z"
+                          ></path>
+                </svg>
+                <a class="folder"><input id="${id}" type="text" style="height: 1rem; width: 80%" value="" min="1"></a>
+            </td>
+            <td style="border-left: none;border-right: none"> - </td>
+            <td style="border-left: none">${new Date().toLocaleString()}</td>`
+            document.getElementById('tbody').append(tr)
+
+            return document.getElementById(id)
+        }
+
+        //
+        // Create dynamic TR for folders
+        //
+        function prepareFolderTR(data) {
+            const tr = document.createElement('tr')
+            tr.innerHTML = `
+            <td style="border-right: none" title="${data.name}">
+                <svg style="vertical-align: middle" xmlns="http://www.w3.org/2000/svg" width="18"
+                     height="18" fill="currentColor"
+                     class="bi bi-folder" viewBox="0 0 18 18">
+                    <path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4H2.19zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707z"
+                          ></path>
+                </svg>
+                <a class="folder" id="${data.id}">${data.name}</a>
+            </td>
+            <td style="border-left: none;border-right: none"> - </td>
+            <td style="border-left: none">${new Date(data.createdAt).toLocaleString()}</td>`
+
+            return tr
+        }
+
+        //
+        // Create dynamic TR for files
+        //
+        function prepareFileTR(data) {
+            const tr = document.createElement('tr')
+            tr.innerHTML = `
+            <td style="border-right: none" title="${data.name}">
+                <svg style="vertical-align: middle" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                     fill="currentColor"
+                     class="bi bi-file-text" viewBox="0 0 18 18">
+                    <path d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z"/>
+                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/>
+                </svg>
+                <a class="file" id="${data.id}">${data.name}</a>
+            </td>
+            <td style="border-left: none;border-right: none">${humanReadableSize(data.size)}</td>
+            <td style="border-left: none">${new Date(data.createdAt).toLocaleString()}</td>`
+
+            return tr
+        }
+
+        //
+        // Util functions
+        //
+        function humanReadableSize(bytes, si = false, dp = 1) {
+            const thresh = si ? 1000 : 1024
+
+            if (Math.abs(bytes) < thresh) {
+                return `${bytes} B`
+            }
+
+            const units = si
+                ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+                : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+            let u = -1
+            const r = 10 ** dp
+
+            do {
+                bytes /= thresh
+                u += 1
+            } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1)
+
+            return `${bytes.toFixed(dp)} ${units[u]}`
+        }
+
+    </script>
+</div>
+</body>
+</html>

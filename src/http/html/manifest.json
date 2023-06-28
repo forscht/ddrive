@@ -1,0 +1,18 @@
+{
+  "name": "DDrive",
+  "short_name": "DDrive",
+  "theme_color": "#62c4ff",
+  "background_color": "#222225",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "description": "A lightweight cloud storage system using discord as storage.",
+  "orientation": "any",
+  "icons": [
+    {
+      "src":"favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
