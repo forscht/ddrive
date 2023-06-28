@@ -1,4 +1,5 @@
 const HTTP_CODE = require('../../constants/httpCode')
+const { throwHttpError } = require('../../utils/Util')
 const db = require('../../services/database')
 
 module.exports.opts = {
@@ -13,6 +14,7 @@ module.exports.opts = {
         },
         response: {
             [HTTP_CODE.OK]: { $ref: 'Directory#' },
+            [HTTP_CODE.BAD_REQUEST]: { $ref: 'CommonError#' },
         },
     },
 }
@@ -22,6 +24,6 @@ module.exports.handler = async (req, reply) => {
         const directory = await db.createDirectoryOrFile(req.body)
         reply.send(directory)
     } else {
-        reply.send('Directory name is empty')
+        throwHttpError('Directory name is empty', HTTP_CODE.BAD_REQUEST)
     }
 }
