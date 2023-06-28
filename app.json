@@ -25,6 +25,14 @@
     "DDRIVE_AUTH": {
       "description": "Optional basic username:password to secure your ddrive site. Example: admin:password123",
       "required": false
+    },
+    "DDRIVE_CHUNK_SIZE": {
+      "description": "Size of chunk (part) to be uploaded to discord in bytes. Max 8MB for bot token and 500MB for nitro user token",
+      "required": false
+    },
+    "DDRIVE_TIMEOUT": {
+      "description": "Time in ms before upload request to discord server will be aborted. Increase it if you have slow internet",
+      "required": false
     }
   },
   "formation": {

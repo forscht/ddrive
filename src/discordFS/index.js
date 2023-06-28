@@ -17,6 +17,7 @@ class DiscordFS {
      * @param {Object} opts
      * @param {String} opts.token - Discord bot/user auth token
      * @param {String} opts.channelId - id of text channel where you want to store your data
+     * @param {Object} opts.rest - Rest options for discord API (ex. timeout)
      * @param {Number} [opts.chunkSize=7864320] - Number of bytes to be chunked for large file. Must be less than 8MB for discord bot user.
      */
     constructor(opts) {
@@ -55,7 +56,7 @@ class DiscordFS {
     async load() {
         debug('>>> booting discordFS')
         // Load all messages in memory
-        const tempMessageCache = []
+        let tempMessageCache = []
         let channelMessages = await this.discordAPI.fetchMessages({ limit: 100 })
         while (channelMessages.length > 0) {
             // Parse message content and filter invalid message
@@ -63,8 +64,7 @@ class DiscordFS {
                 .map((message) => ({
                     ...message,
                     content: Util.safeParse(message.content),
-                }))
-                .filter((message) => message !== undefined))
+                })))
             // Get next messages
             // eslint-disable-next-line no-await-in-loop
             channelMessages = await this.discordAPI.fetchMessages(
@@ -74,9 +74,7 @@ class DiscordFS {
                 },
             )
         }
-
-        if(channelMessages.length === 0) return // Text channel is empty
-
+        tempMessageCache = tempMessageCache.filter((message) => message.content !== undefined)
         const messagesGroupByType = _.groupBy(tempMessageCache, (message) => message.content.type)
         // Channel is empty
         if (!messagesGroupByType.directory) return

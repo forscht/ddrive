@@ -25,7 +25,7 @@
 
 https://user-images.githubusercontent.com/59018146/167635903-48cdace0-c383-4e7d-a037-4a32eaa4ab69.mp4
 
-#### Current development branch `3.x`
+#### Current development branch `4.x`
 
 ### Features
 - Theoretically unlimited file size thanks to splitting the file in 8mb chunks using nodejs streams API.
@@ -51,7 +51,7 @@ https://user-images.githubusercontent.com/59018146/167635903-48cdace0-c383-4e7d-
 ### Setting up the program
 #### With NPM, Open terminal/cmd and run following commands.
 ```shell
-npm install -g @forscht/ddrive
+npm install -g @forscht/ddrive@~3
 ddrive --token <bot token> --channelId <guild channel id>
 # Open http://localhost:8080 in browser
 # use <ddrive help> for more info
@@ -61,14 +61,14 @@ ddrive --token <bot token> --channelId <guild channel id>
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/forscht/ddrive/tree/3.x)
 
 #### One Click Deploy with Replit:
-[![Deploy](https://replit.com/badge/github/forscht/ddrive)](https://replit.com/github/forscht/ddrive)
+[![Deploy](https://replit.com/badge/github/forscht/ddrive)](https://replit.com/github/forscht/ddrive/tree/3.x)
 
 #### One Click Deploy with Railway:
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/ALJmfS?referralCode=27ekYT)
 
 #### With Docker
 ```shell
-docker run --rm -p 8080:8080 -it forscht/ddrive --port 8080 --token <bot-token> --channelId <guild-channel-id>
+docker run --rm -p 8080:8080 -it forscht/ddrive:3.7.5 --port 8080 --token <bot-token> --channelId <guild-channel-id>
 # Open http://localhost:8080 in browser
 # use <docker run --rm -it forscht/ddrive help> for more info
 ```
@@ -90,7 +90,7 @@ pm2 start ddrive
 #### Fix Windows Powershell issue
 ```shell
 #ERROR 
-# ddrive : File C:\Users\<User>\AppData\Roaming\npm\ddrive.ps1 cannot be loaded because running scripts is disabled on this system. For more information
+# ddrive : File C:\Users\<User>\AppData\Roaming\npm\ddrive.ps1 cannot be loaded because running scripts is disabled on this system.
 1. Open powershell as Administrator
 2. run `set-executionpolicy remotesigned`
 ```
@@ -106,6 +106,12 @@ Options:
                                                                         [string]
   -T, --token      Discord bot/user token                    [string] [required]
   -C, --channelId  Text channel id where data will be stored [string] [required]
+      --timeout    Time in ms before upload request to discord server will be
+                   aborted. Increase it if you have slow internet       [number]
+      --chunkSize  Size of chunk (part) to be uploaded to discord in bytes. Max
+                   8MB for bot token and 500MB for nitro user token     [number]
+      --metadata   Enables route /metadata where all the file metadata will be
+                   sent as json                                         [string]
       --config     Path to JSON config file
 ```
 
@@ -124,7 +130,6 @@ const auth = '' // Basic auth for ddrive site. Format - username:password
 // Other available options // https://github.com/discordjs/discord.js/blob/c25e8ad78b1a020a24ec50e30dd7315234ce9309/packages/rest/src/lib/REST.ts#L21
 const restOpts = {
     timeout: '60000',
-    // authPrefix: '', Uncomment this if you're using user token
 }
 const chunkSize = 7864320 // Default 7.8 MB
 
@@ -140,3 +145,10 @@ const run = async () => {
 run().then()
 
 ```
+
+### FAQ
+1. Can I use user token to store the files?
+   1. Yes you can
+2. How can I use user token to store the files?
+   1. Extract user token (Search in YouTube how to extract user token)
+   2. Append 'USER' before the token. Example `User {TOKEN}`
