@@ -49,7 +49,7 @@ module.exports.handler = async (req, reply) => {
     const resHeaders = {
         'Content-Length': file.size,
         'Accept-Ranges': 'bytes',
-        'Content-Disposition': `attachment; filename=${encodeURI(file.name)}`,
+        'Content-Disposition': `attachment; filename="${encodeURI(file.name)}"`,
     }
     const mimeType = mime.lookup(path.extname(file.name))
     if (mimeType) resHeaders['Content-Type'] = mimeType
