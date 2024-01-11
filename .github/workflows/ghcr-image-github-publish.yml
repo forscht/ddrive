@@ -22,9 +22,9 @@ jobs:
             with:
               registry: ghcr.io
               username: ${{github.actor}}
-              password: ${{secrets.GITHUB_TOKEN}}
+              password: ${{secrets.Git_TOKEN}}
 
           - name: Build Inventory Image
             run: |
-                docker build . ghcr.io/${{github.actor}}/ddrive:${{ steps.extract-version.outputs.version }}
+                docker build . ghcr.io/${{github.actor}}/ddrive:${{ steps.extract-version.outputs.version }} -f docker/Dockerfile
                 docker push ghcr.io/${{github.actor}}/ddrive:${{ steps.extract-version.outputs.version }}
