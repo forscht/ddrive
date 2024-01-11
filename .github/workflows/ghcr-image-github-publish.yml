@@ -24,7 +24,7 @@ jobs:
               username: ${{github.actor}}
               password: ${{secrets.Git_TOKEN}}
 
-          - name: Build Inventory Image
+          - name: Build inventory image
             run: |
-                docker build . ghcr.io/${{github.actor}}/ddrive:${{ steps.extract-version.outputs.version }} -f docker/Dockerfile
-                docker push ghcr.io/${{github.actor}}/ddrive:${{ steps.extract-version.outputs.version }}
+              docker build . -t ghcr.io/${{github.actor}}/ddrive:${{ steps.extract-version.outputs.version }} -f docker/Dockerfile
+              docker push ghcr.io/${{github.actor}}/ddrive:${{ steps.extract-version.outputs.version }}
